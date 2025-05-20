@@ -1,0 +1,54 @@
+<div class="d-flex flex-column">
+  <app-form-area></app-form-area>
+
+  <div *ngFor="let res of responseMrbs | async" class="card mx-auto">
+    <div class="card-body">
+      <h3 class="card-title">Edit {{ res.area_name }} (ID: {{ res.id }})</h3>
+
+      <button
+        class="btn btn-primary mb-3"
+        (click)="openDeleteAreaModal(res)"
+        [disabled]="loading"
+      >
+        <span *ngIf="loading" class="spinner-border spinner-border-sm"></span>
+        Delete Area
+      </button>
+
+      <div class="table-responsive-lg">
+        <table class="table table-bordered">
+          <thead class="table-light">
+            <tr>
+              <th>Room</th>
+              <th>Data</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let room of res.rooms">
+              <td>
+                {{ room.room_name }}
+                <button
+                  class="btn btn-primary mb-3"
+                  (click)="openDeleteRoomModal(room)"
+                  [disabled]="loading"
+                >
+                  <span
+                    *ngIf="loading"
+                    class="spinner-border spinner-border-sm"
+                  ></span>
+                  Delete Room
+                </button>
+              </td>
+              <td>
+                {{ room.description }}<br />
+                Workspaces: {{ room.capacity }} | Usable:
+                {{ room.registration_limit }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <app-form-room></app-form-room>
+    </div>
+  </div>
+</div>

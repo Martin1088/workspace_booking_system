@@ -1,0 +1,96 @@
+<h2 class="text-center my-4">Welcome Tester </h2>
+
+@if (!loading) {
+  <div>
+    <div class="d-flex flex-row justify-content-center">
+      <input
+        type="date"
+        [valueAsDate]="date"
+        [min]="startdate"
+        [max]="enddate"
+        (change)="onChangeDate($event)"
+      />
+    </div>
+
+    <div class="d-flex flex-row justify-content-center">
+      <div *ngFor="let res of responseMrbs" class="card mx-auto border-info mb-3">
+        <div class="card-body">
+          <h3 class="card-title">{{ res.area_name }}</h3>
+          <div class="bg-info p-3 rounded border border-dark">
+            <app-header-join-select
+              [res]="res.rooms"
+              [cardDate]="date.toISOString()"
+              [weekOrDay]="weekOrDay"
+            ></app-header-join-select>
+            <app-overview-table
+              [res]="res.rooms"
+              [date]="date.toISOString()"
+              [weekOrDay]="weekOrDay"
+            ></app-overview-table>
+          </div>
+          <div class="mt-4 bg-info p-3 rounded border border-dark">
+            <h2>Book for {{ res.area_name }} the next week(s):</h2>
+            <label for="allrooms">Rooms</label>
+            <select
+              class="form-select mb-3"
+              id="allrooms"
+              [(ngModel)]="booking_roomid"
+            >
+              <option *ngFor="let room of res.rooms" [value]="room.id">
+                {{ room.room_name }}
+              </option>
+            </select>
+
+            <div class="mb-3 d-flex flex-column">
+              <div
+                *ngFor="let day of workingDays"
+                class="form-check form-check-inline"
+              >
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  [id]="day.name + res.area_name"
+                  [value]="day.num"
+                  [checked]="bookingdays.includes(day.num)"
+                  (change)="updateBookingDays($event, day.num)"
+                />
+                <label
+                  class="form-check-label"
+                  [for]="day.name + res.area_name"
+                >{{ day.name }}</label
+                >
+              </div>
+
+              <label class="form-label" for="{{ res.area_name }}"
+              >Repeating {{ repeat_weeks }} week(s) {{ bookingdays }}</label
+              >
+              <input
+                type="range"
+                class="form-range mb-3"
+                min="1"
+                max="15"
+                [(ngModel)]="repeat_weeks"
+              />
+
+              <button
+                class="btn btn-success"
+                (click)="setJoins()"
+                [disabled]="loading"
+              >
+                <ng-container *ngIf="loading">
+                <span
+                  class="spinner-border spinner-border-sm"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+                  Loading...
+                </ng-container>
+                <ng-container *ngIf="!loading">Join Room</ng-container>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+}

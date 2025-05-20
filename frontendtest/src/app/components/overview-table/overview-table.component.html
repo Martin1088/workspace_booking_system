@@ -1,0 +1,38 @@
+<div class="table-responsive-lg">
+  <table class="table table-bordered table-striped table-hover">
+    <thead class="bg-dark text-white">
+      <tr class="bg-secondary text-light">
+        <th>Room</th>
+        <th>Participants</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let room of res">
+        <td>
+          {{ room.room_name }}<br />
+          {{ room.description }}
+          <span *ngIf="room.entry_id == null">𐄂</span>
+          <span *ngIf="room.entry_id != null">✔</span>
+        </td>
+        <td>
+          <div *ngFor="let p of room.participants" class="">
+            {{ getName(p.username) }}<br />
+            <button
+              class="btn btn-sm btn-danger ms-2"
+              (click)="deleteJoin(p.id)"
+              [disabled]="loading"
+            >
+              <span
+                *ngIf="loading"
+                class="spinner-border spinner-border-sm"
+                role="status"
+                aria-hidden="true"
+              ></span>
+              <span *ngIf="!loading">Delete</span>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

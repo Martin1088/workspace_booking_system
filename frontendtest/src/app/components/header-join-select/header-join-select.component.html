@@ -1,0 +1,54 @@
+<div class="form-group mb-3">
+  <label for="allrooms" class="form-label">Rooms</label>
+  <select
+    class="form-select"
+    name="allrooms"
+    id="allrooms"
+    [(ngModel)]="select_room"
+  >
+    <option [ngValue]="null">Select a room</option>
+    <option *ngFor="let room of res" [ngValue]="room">
+      {{ room.room_name }} - {{ room.description }}
+    </option>
+  </select>
+</div>
+
+<div class="form-group mb-3">
+  <label for="allusers" class="form-label">Workspace user (Optional)</label>
+  <select
+    class="form-select"
+    name="allusers"
+    id="allusers"
+    [(ngModel)]="other_user"
+  >
+    <option [ngValue]="null" selected>You</option>
+    <option *ngFor="let beam_user of users" [ngValue]="beam_user">
+      {{ beam_user }}
+    </option>
+  </select>
+  <small class="form-text">Select another user if needed</small>
+
+  <input
+    type="text"
+    id="optionuser"
+    name="optionuser"
+    class="form-control mt-2"
+    placeholder="Only to join as other user"
+    [(ngModel)]="other_user"
+  />
+</div>
+
+<button
+  class="btn btn-primary mb-3"
+  type="submit"
+  (click)="handleCardDate()"
+  [disabled]="loading"
+>
+  <span
+    *ngIf="loading"
+    class="spinner-border spinner-border-sm"
+    role="status"
+    aria-hidden="true"
+  ></span>
+  <span *ngIf="!loading">Join Room</span>
+</button>

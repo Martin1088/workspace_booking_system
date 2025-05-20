@@ -1,0 +1,62 @@
+<div class="d-flex flex-row">
+  <div class="card mx-auto">
+    <div class="card-body">
+      <h3 class="card-title">Default Entries</h3>
+      <p>
+        Range for entries {{ firstAvailableEntry }} and {{ lastAvailableEntry }}
+      </p>
+      <br />
+
+      <label>Start Entry</label>
+      <input type="date" [(ngModel)]="startEntry" class="form-control" />
+
+      <label>End Entry</label>
+      <input type="date" [(ngModel)]="endEntry" class="form-control" />
+
+      <button
+        class="btn btn-primary mb-3"
+        (click)="setDefaultEntries()"
+        [disabled]="loading"
+      >
+        <span
+          *ngIf="loading"
+          class="spinner-border spinner-border-sm"
+          role="status"
+        ></span>
+        Set Default Entry
+      </button>
+
+      <hr />
+
+      <p>Delete old entries until this date:</p>
+      <input type="date" [(ngModel)]="deleteStartDate" class="form-control" />
+      <input type="date" [(ngModel)]="deleteEndDate" class="form-control" />
+
+      <button
+        class="btn btn-danger mb-3"
+        (click)="confirmDelete()"
+        [disabled]="loading"
+      >
+        <span
+          *ngIf="loading"
+          class="spinner-border spinner-border-sm"
+          role="status"
+        ></span>
+        Delete Entry
+      </button>
+
+      <app-confirm-modal
+        [show]="showModalDelete"
+        [message]="
+          'Are you sure you want to delete all entries from ' +
+          deleteStartDate +
+          ' till ' +
+          deleteEndDate +
+          '?'
+        "
+        (confirm)="deleteEntries()"
+        (cancel)="showModalDelete = false"
+      ></app-confirm-modal>
+    </div>
+  </div>
+</div>

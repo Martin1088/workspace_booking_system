@@ -1,0 +1,7 @@
+<app-navbar
+  [menu]="activeRoute"
+  [navItems]="navItems"
+  (menuChange)="navigate($event)"
+></app-navbar>
+
+<router-outlet></router-outlet>
