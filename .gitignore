@@ -6,6 +6,8 @@
 # will have compiled files and executables
 debug/
 target/
+.idea
+.DS_Store
 
 # include cargo lock
 !Cargo.lock

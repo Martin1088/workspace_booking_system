@@ -39,6 +39,7 @@ pub async fn get_overview_day(
     Ok(res)
 }
 
+#[axum::debug_handler]
 pub async fn read_overview_day(
     State(ctx): State<AppContext>,
     Json(params): Json<OverviewQuery>,
