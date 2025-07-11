@@ -8,3 +8,6 @@ pub mod mrbs_zoneinfo;
 pub mod mrbs_participants;
 pub mod mrbs_variables;
 pub mod mrbs_repeat;
+pub mod default_entries;
+pub mod help_fn;
+pub mod create_admin;

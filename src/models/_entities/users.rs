@@ -25,6 +25,7 @@ pub struct Model {
     pub email_verified_at: Option<DateTimeUtc>,
     pub magic_link_token: Option<String>,
     pub magic_link_expiration: Option<DateTimeUtc>,
+    pub is_admin: Option<i8>,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]

@@ -13,7 +13,8 @@ import {HttpClient, HttpParams} from '@angular/common/http';
   providedIn: 'root'
 })
 export class FetchService {
-  private apiUrl: String;
+  private apiReadUrl: string;
+  private apiUpdatesUrl: string;
   private loading = new BehaviorSubject<boolean>(false);
   loading$ = this.loading.asObservable();
 
@@ -28,18 +29,22 @@ export class FetchService {
 
   constructor(private http: HttpClient,
               @Inject('API_BASE_URL') private baseUrl: string) {
-    this.apiUrl = this.baseUrl;
+    this.apiReadUrl = this.baseUrl;
   }
 
-  private setLoading(state: boolean) {
+  public setLoading(state: boolean) {
     this.loading.next(state);
+  }
+
+  public setInfo(newInfo: string): void {
+    this.info.next(newInfo);
   }
 
   async getOverviewday(inputDate: Date | null): Promise<void> {
     this.setLoading(true);
     try {
       const date = inputDate ? inputDate.toISOString() : null;
-      const res = await firstValueFrom(this.http.post<ApiMrbsResponse>(this.apiUrl + 'overviewday', { date }));
+      const res = await firstValueFrom(this.http.post<ApiMrbsResponse>(this.apiReadUrl + 'read/overviewday', { date }));
       console.log(res.result);
       this.responseMrbs.next(res.result);
     } catch (e) {
@@ -53,7 +58,7 @@ export class FetchService {
     this.setLoading(true);
     try {
       const date = inputDate ? inputDate.toISOString() : null;
-      const res = await firstValueFrom(this.http.post<ApiWeekResponse>(this.apiUrl + 'overviewweek', { date }));
+      const res = await firstValueFrom(this.http.post<ApiWeekResponse>(this.apiReadUrl + 'read/overviewweek', { date }));
       this.weekData.next(res.result);
     } catch (e) {
       this.info.next(e as string);
@@ -66,7 +71,7 @@ export class FetchService {
     this.setLoading(true);
     try {
       const params = new HttpParams().set('entryId', id.toString());
-      await firstValueFrom(this.http.delete<string>(this.apiUrl + 'participant', { params }));
+      await firstValueFrom(this.http.delete<string>(this.apiReadUrl + 'participant', { params }));
       if (week) {
         await this.getOverviewweek(date);
       } else {
@@ -118,4 +123,3 @@ export class FetchService {
     }
   }
 }
-

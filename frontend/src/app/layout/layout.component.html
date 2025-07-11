@@ -1,0 +1,17 @@
+@if (!hideNavbar()) {
+  @if (!isAdmin) {
+    <app-navbar
+      [navItems]="navUser"
+    ></app-navbar>
+  } @else {
+    <app-navbar
+      [navItems]="navAdmin"
+    ></app-navbar>
+  }
+}
+@if (info) {
+  <div class="alert alert-info mt-2" role="alert">
+    {{ info }}
+  </div>
+}
+<router-outlet></router-outlet>

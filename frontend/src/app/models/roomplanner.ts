@@ -44,15 +44,15 @@ export interface ApiWeekResponse {
 }
 
 export const navAdmin = [
-  { label: 'Today', id: 1 },
-  { label: 'Weekday', id: 2 },
-  { label: 'Office Layout', id: 3 },
-  { label: 'Admin Create', id: 4 },
+  { label: 'Today', routes: '/today' },
+  { label: 'Weekday', routes: '/weekday' },
+  { label: 'Office Layout', routes: '/office-layout' },
+  { label: 'Admin Create', routes: '/admin-create' },
 ];
 export const navUser = [
-  { label: 'Today', id: 1 },
-  { label: 'Weekday', id: 2 },
-  { label: 'Office Layout', id: 3 },
+  { label: 'Today', routes: '/today' },
+  { label: 'Weekday', routes: '/weekday' },
+  { label: 'Office Layout', routes: '/office-layout' },
 ];
 
 export type RangeOfDefaultEntries = {
@@ -60,3 +60,14 @@ export type RangeOfDefaultEntries = {
   end: string
 }
 
+export  interface LoginResponse {
+  token: string,
+  pid: string,
+  name: string,
+  is_verified: boolean,
+  is_admin: boolean,
+}
+
+export interface ResponseMsg {
+  message: string;
+}

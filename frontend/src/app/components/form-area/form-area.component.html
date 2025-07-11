@@ -1,1 +1,31 @@
-<p>form-area works!</p>
+<div class="card mx-auto">
+  <div class="card-body">
+    <h3 class="card-title">Create new Area</h3>
+
+    <label for="areaname" class="form-label">Area Name</label>
+    <input
+      type="text"
+      id="areaname"
+      name="areaname"
+      class="form-control mb-3"
+      placeholder="area name"
+      [(ngModel)]="areaName"
+      aria-required="true"
+    />
+
+    <button
+      class="btn btn-primary mb-3"
+      type="submit"
+      (click)="createArea()"
+      [disabled]="loading"
+      [attr.aria-busy]="loading"
+      aria-live="polite"
+    >
+      @if (loading) {
+        <app-loading-modal [message]="'Saving your area ... Please wait.'"></app-loading-modal>
+      } @else {
+        Create Area
+      }
+    </button>
+  </div>
+</div>

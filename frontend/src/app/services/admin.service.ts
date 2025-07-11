@@ -1,9 +1,10 @@
 import {Inject, Injectable} from '@angular/core';
-import {RangeOfDefaultEntries} from '../models/roomplanner';
+import {RangeOfDefaultEntries, ResponseMsg} from '../models/roomplanner';
 import {BehaviorSubject, firstValueFrom, Observable} from 'rxjs';
-import { API_BASE_URL } from '../app.config'
+import {API_BASE_URL} from '../app.config'
 
 import {HttpClient, HttpParams} from '@angular/common/http';
+import {FetchService} from './fetch.service';
 
 
 @Injectable({
@@ -11,11 +12,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 })
 export class AdminService {
   private apiUrl: String;
-  private loading = new BehaviorSubject<boolean>(false);
-  loading$ = this.loading.asObservable();
-
-  private info = new BehaviorSubject<string | null>(null);
-  info$ = this.info.asObservable();
+  private info: string = "";
 
   private firstAvailableEntry = new BehaviorSubject<string | null>(null);
   firstAvailableEntry$ = this.firstAvailableEntry.asObservable();
@@ -23,19 +20,30 @@ export class AdminService {
   private lastAvailableEntry = new BehaviorSubject<string | null>(null);
   lastAvailableEntry$ = this.lastAvailableEntry.asObservable();
 
-  constructor(private http: HttpClient,
+  constructor(private fetchService: FetchService, private http: HttpClient,
               @Inject('API_BASE_URL') private baseUrl: string) {
-    this.apiUrl = this.baseUrl;
+    this.apiUrl = this.baseUrl + "admin/";
   }
 
-  private setLoading(state: boolean) {
-    this.loading.next(state);
+  private async handleRequest<T>(
+    request$: Observable<T>,
+    defaultError: string
+  ): Promise<void> {
+    try {
+      const res = await firstValueFrom(request$);
+      const message = (res as any)?.message || 'Operation successful';
+      this.fetchService.setInfo(message);
+    } catch (error: any) {
+      const errorMessage = error?.error?.message || error?.message || defaultError;
+      this.fetchService.setInfo(errorMessage);
+    }
   }
-
 
   async getRangeDefaultEntries() {
     try {
-      let r = await firstValueFrom(this.http.get<{ RangeOfDefaultEntries: RangeOfDefaultEntries }>(this.apiUrl + 'rangedefaultentries'));
+      let r = await firstValueFrom(this.http.get<{
+        RangeOfDefaultEntries: RangeOfDefaultEntries
+      }>(this.apiUrl + 'rangedefaultentries'));
       let res: RangeOfDefaultEntries = r.RangeOfDefaultEntries;
 
       if (res && typeof res.start === 'string' && typeof res.end === 'string') {
@@ -48,7 +56,7 @@ export class AdminService {
     } catch (e: string | unknown) {
       console.error('Error fetching range_default_entries:', e);
       if (typeof e === 'string') {
-        this.info.next(e);
+        this.fetchService.setInfo(e);
       }
     }
   }
@@ -57,10 +65,10 @@ export class AdminService {
     let start: string = startdate.toISOString();
     let end: string = enddate.toISOString();
     try {
-      let res = await firstValueFrom(this.http.post<string>(this.apiUrl + 'setdefaultentries', { start, end }));
+      let res = await firstValueFrom(this.http.post<string>(this.apiUrl + 'setdefaultentries', {start, end}));
       console.log(res);
     } catch (e) {
-      this.info.next(e as string);
+      this.fetchService.setInfo(e as string);
     }
   }
 
@@ -71,36 +79,62 @@ export class AdminService {
       .set('start', start)
       .set('end', end);
     try {
-      let res = await firstValueFrom(this.http.delete(this.apiUrl + 'deletedefaultentries', { params }));
+      let res = await firstValueFrom(this.http.delete(this.apiUrl + 'deletedefaultentries', {params}));
       console.log(res);
     } catch (e) {
-      this.info.next(e as string);
+      this.fetchService.setInfo(e as string);
     }
   }
 
-  async createArea(areaName: string) {
-    this.info.next(await firstValueFrom(this.http.post<string>(this.apiUrl + 'createarea', { areaName })).catch((e) => e));
+  async createArea(area_name: string): Promise<void> {
+    const request$ = this.http.post<ResponseMsg>(`${this.apiUrl}createarea`, {area_name});
+    await this.handleRequest(request$, 'Failed to create area');
   }
 
-  async deleteArea(areaId: number) {
-    const params = new HttpParams().set('areaId', areaId);
-    this.info.next(await firstValueFrom(this.http.delete<string>(this.apiUrl + 'deletearea', { params })).catch((e) => e));
+  async deleteArea(area_id: number): Promise<void> {
+    const request$ = this.http.delete<ResponseMsg>(`${this.apiUrl}deletearea/${area_id}`);
+    await this.handleRequest(request$, 'Failed to delete area');
   }
 
-  async updateArea(areaId: number, areaName: string) {
-    this.info.next(await firstValueFrom(this.http.post<string>(this.apiUrl + 'updatearea', { areaId, areaName })).catch((e) => e));
+  async updateArea(areaId: number, areaName: string): Promise<void> {
+    const request$ = this.http.post<ResponseMsg>(`${this.apiUrl}updatearea`, {
+      areaId,
+      areaName,
+    });
+    await this.handleRequest(request$, 'Failed to update area');
   }
 
-  async createRoom(areaId: number, roomName: string, description: string, capacity: number) {
-    this.info.next(await firstValueFrom(this.http.post<string>(this.apiUrl + 'createroom', { areaId, roomName, description, capacity })).catch((e) => e));
+
+  async createRoom(
+    area_id: number,
+    room_name: string,
+    description: string,
+    capacity: number,
+    date: Date
+  ) {
+    const request$ = this.http.post<ResponseMsg>(`${this.apiUrl}createroom`, {
+      area_id,
+      room_name,
+      description,
+      capacity
+    });
+    await this.handleRequest(request$, 'Failed to create room');
   }
 
   async deleteRoom(roomId: number) {
-    const params = new HttpParams().set('roomId', roomId);
-    this.info.next(await firstValueFrom(this.http.delete<string>(this.apiUrl + 'deleteroom', { params })).catch((e) => e));
+      const request$ = this.http.delete<ResponseMsg>(`${this.apiUrl}deleteroom/${roomId}`);
+      this.fetchService.setInfo(res.message);
+    await this.handleRequest(request$, 'Failed to delete room');
   }
 
   async updateRoom(roomId: number, roomName: string, description: string, capacity: number, areaId: number) {
-    this.info.next(await firstValueFrom(this.http.post<string>(this.apiUrl + 'updateroom', { roomId, roomName, description, capacity, areaId })).catch((e) => e));
+    const request$ = this.http.post<string>(`${this.apiUrl}updateroom`, {
+        room_id,
+        area_id,
+        room_name,
+        description,
+        capacity
+      });
+    await this.handleRequest(request$, 'Failed to update room');
   }
 }

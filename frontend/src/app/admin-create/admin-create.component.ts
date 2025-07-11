@@ -18,16 +18,19 @@ export class AdminCreateComponent {
   responseMrbs: Area[] = [];
   loading: boolean = false;
   info: string = '';
+  date: Date = new Date();
 
-  constructor(private adminservice: AdminService, private fetchservice: FetchService) { }
+  constructor(private adminService: AdminService, private fetchService: FetchService) { }
 
   ngOnInit(): void {
+    this.getOverviewday();
+    this.fetchService.loading$.subscribe(loading => this.loading = loading);
+    this.fetchService.responseMrbs$.subscribe(data => this.responseMrbs = data);
+  }
 
-    this.adminservice.info$.subscribe(info => this.info = info || '');
-    this.adminservice.loading$.subscribe(loading => this.loading = loading);
-    this.fetchservice.responseMrbs$.subscribe(data => this.responseMrbs = data);
 
-    this.fetchservice.getOverviewday(null);
+  async getOverviewday() {
+    await this.fetchService.getOverviewday(this.date);
   }
 
 }

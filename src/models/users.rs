@@ -226,6 +226,8 @@ impl Model {
         let password_hash =
             hash::hash_password(&params.password).map_err(|e| ModelError::Any(e.into()))?;
         let user = users::ActiveModel {
+            pid: ActiveValue::set(Uuid::new_v4().as_bytes().to_vec()),
+            api_key: ActiveValue::set(Uuid::new_v4().to_string()),
             email: ActiveValue::set(params.email.to_string()),
             password: ActiveValue::set(password_hash),
             name: ActiveValue::set(params.name.to_string()),

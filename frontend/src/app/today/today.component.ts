@@ -29,12 +29,10 @@ export class TodayComponent implements OnInit {
   constructor(private fetchService: FetchService) { }
 
   ngOnInit(): void {
-
+    this.getOverviewday();
     this.fetchService.info$.subscribe(info => this.info = info || '');
     this.fetchService.loading$.subscribe(loading => this.loading = loading);
     this.fetchService.responseMrbs$.subscribe(data => this.responseMrbs = data);
-
-    this.fetchService.getOverviewday(null);
   }
   onChangeDate(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -52,8 +50,8 @@ export class TodayComponent implements OnInit {
     }
   }
 
-  getOverviewday() {
-    this.fetchService.getOverviewday(this.date);
+  async getOverviewday() {
+    await this.fetchService.getOverviewday(this.date);
   }
 
   setJoins() {

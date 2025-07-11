@@ -2,13 +2,12 @@ import { Component } from '@angular/core';
 import { FetchService } from '../../services/fetch.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ConfirmModalComponent } from '../confirm-modal/confirm-modal.component';
 import {AdminService} from '../../services/admin.service';
 
 @Component({
   selector: 'app-admin-fn',
   standalone: true,
-  imports: [CommonModule, FormsModule, ConfirmModalComponent],
+  imports: [CommonModule, FormsModule],
   templateUrl: './admin-fn.component.html',
   styleUrl: './admin-fn.component.css'
 })
@@ -35,22 +34,14 @@ export class AdminFnComponent {
     this.adminService.lastAvailableEntry$.subscribe(date => {
       this.lastAvailableEntry = date;
     });
-
-    this.adminService.info$.subscribe(message => {
-      this.info = message;
-    });
   }
 
   setDefaultEntries() {
     this.adminService.setDefaultEntries(this.startEntry, this.endEntry);
   }
-
-  confirmDelete() {
-    this.showModalDelete = true;
-  }
-
+  
   deleteEntries() {
     this.adminService.deleteDefaultEntries(this.deleteStartDate, this.deleteEndDate);
-    this.showModalDelete = false;
+    
   }
 }

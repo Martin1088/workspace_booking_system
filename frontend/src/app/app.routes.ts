@@ -7,6 +7,7 @@ import {OfficeLayoutComponent} from './office-layout/office-layout.component';
 import {AppComponent} from './app.component';
 import {AdminCreateComponent} from './admin-create/admin-create.component';
 import {GuardService} from './services/guard.service';
+import {LayoutComponent} from './layout/layout.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -18,16 +19,17 @@ export const routes: Routes = [
   // Protected Routes
   {
     path: '',
-    component: AppComponent, // wraps navbar + router-outlet
+    component: LayoutComponent,
     canActivate: [GuardService],
     children: [
       { path: 'today', component: TodayComponent },
       { path: 'weekday', component: WeekdayComponent },
-      { path: 'layout', component: OfficeLayoutComponent },
+      { path: 'office-layout', component: OfficeLayoutComponent },
       {
         path: 'admin-create',
         component: AdminCreateComponent,
-        canActivate: [GuardService], // restrict this route
+        canActivate: [GuardService],
+        data: { adminOnly: true },
       },
     ]
   },

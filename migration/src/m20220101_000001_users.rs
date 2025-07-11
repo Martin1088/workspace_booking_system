@@ -17,6 +17,7 @@ impl MigrationTrait for Migration {
                 ("password", ColType::String),
                 ("api_key", ColType::StringUniq),
                 ("name", ColType::String),
+                ("is_admin", ColType::Boolean),
                 ("reset_token", ColType::StringNull),
                 ("reset_sent_at", ColType::TimestampWithTimeZoneNull),
                 ("email_verification_token", ColType::StringNull),

@@ -34,7 +34,7 @@
 
       <button
         class="btn btn-danger mb-3"
-        (click)="confirmDelete()"
+        (click)="deleteEntries()"
         [disabled]="loading"
       >
         <span
@@ -45,18 +45,6 @@
         Delete Entry
       </button>
 
-      <app-confirm-modal
-        [show]="showModalDelete"
-        [message]="
-          'Are you sure you want to delete all entries from ' +
-          deleteStartDate +
-          ' till ' +
-          deleteEndDate +
-          '?'
-        "
-        (confirm)="deleteEntries()"
-        (cancel)="showModalDelete = false"
-      ></app-confirm-modal>
     </div>
   </div>
 </div>

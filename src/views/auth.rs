@@ -8,6 +8,7 @@ pub struct LoginResponse {
     pub pid: String,
     pub name: String,
     pub is_verified: bool,
+    pub is_admin: bool,
 }
 
 impl LoginResponse {
@@ -18,6 +19,7 @@ impl LoginResponse {
             pid: String::from_utf8_lossy(&user.pid).to_string(),
             name: user.name.clone(),
             is_verified: user.email_verified_at.is_some(),
+            is_admin: (user.is_admin.unwrap_or(0) != 0),
         }
     }
 }

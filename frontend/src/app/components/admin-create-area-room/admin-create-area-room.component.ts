@@ -1,69 +1,51 @@
-import { Component, OnInit } from '@angular/core';
-import { Area, Room } from '../../models/roomplanner';
-import { FetchService } from '../../services/fetch.service';
-import { BehaviorSubject } from 'rxjs';
-import { CommonModule } from '@angular/common';
-import { ConfirmModalComponent } from '../confirm-modal/confirm-modal.component';
-import { FormAreaComponent } from '../form-area/form-area.component';
-import { FormUpdateRoomComponent } from '../form-update-room/form-update-room.component';
-import { FormRoomComponent } from '../form-room/form-room.component';
+import {Component, OnInit} from '@angular/core';
+import {Area, Room} from '../../models/roomplanner';
+import {FetchService} from '../../services/fetch.service';
+import {CommonModule} from '@angular/common';
+import {FormAreaComponent} from '../form-area/form-area.component';
+import {FormUpdateRoomComponent} from '../form-update-room/form-update-room.component';
+import {FormRoomComponent} from '../form-room/form-room.component';
 import {AdminService} from '../../services/admin.service';
 
 @Component({
   selector: 'app-admin-create-area-room',
   standalone: true,
-  imports: [CommonModule, ConfirmModalComponent, FormAreaComponent, FormUpdateRoomComponent, FormRoomComponent],
+  imports: [CommonModule, FormAreaComponent, FormUpdateRoomComponent, FormRoomComponent],
   templateUrl: './admin-create-area-room.component.html',
   styleUrl: './admin-create-area-room.component.css'
 })
 export class AdminCreateAreaRoomComponent implements OnInit {
-  responseMrbs = new BehaviorSubject<Area[]>([]);
-  selectedArea = new BehaviorSubject<Area | null>(null);
-  selectedRoom = new BehaviorSubject<Room | null>(null);
-  showModalDelete = new BehaviorSubject<boolean>(false);
-  loading = new BehaviorSubject<boolean>(false);
+  responseMrbs: Area[] = [];
+  loading: boolean = false;
+  info: string = '';
   selectRoom: Room | null = null;
+  date: Date = new Date();
 
-  constructor(private fetchService: FetchService, private adminService: AdminService) { }
+  constructor(private fetchService: FetchService, private adminService: AdminService) {
+  }
 
   ngOnInit() {
-    this.loadAreas();
+    this.fetchService.info$.subscribe(info => this.info = info || '');
+    this.fetchService.loading$.subscribe(loading => this.loading = loading);
+    this.fetchService.responseMrbs$.subscribe(data => this.responseMrbs = data);
   }
 
   async loadAreas() {
-    try {
-      //const areas = await this.fetchService.getAreas();
-      //this.responseMrbs.next(areas);
-    } catch (error) {
-      console.error('Error fetching areas:', error);
-    }
+    await this.fetchService.getOverviewday(this.date);
   }
 
-  async deleteSelectedArea() {
-    const area = this.selectedArea.getValue();
-    if (area) {
-      //await this.adminService.deleteArea(area.id);
-      this.showModalDelete.next(false);
-      this.loadAreas();
-    }
+  async deleteSelectedArea(area_name: string, id: number) {
+    console.log(id);
+    console.log(area_name);
+    await this.adminService.deleteArea(id);
+    this.loadAreas();
   }
 
-  async deleteSelectedRoom() {
-    const room = this.selectedRoom.getValue();
-    if (room) {
-      //await this.adminService.deleteRoom(room.id);
-      this.showModalDelete.next(false);
-      this.loadAreas();
-    }
+  async deleteSelectedRoom(room_name: string, id: number) {
+    console.log(id);
+    console.log(room_name);
+    await this.adminService.deleteRoom(id);
+    this.loadAreas();
   }
 
-  openDeleteAreaModal(area: Area) {
-    this.selectedArea.next(area);
-    this.showModalDelete.next(true);
-  }
-
-  openDeleteRoomModal(room: Room) {
-    this.selectedRoom.next(room);
-    this.showModalDelete.next(true);
-  }
 }

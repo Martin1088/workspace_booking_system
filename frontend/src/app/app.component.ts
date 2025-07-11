@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, inject} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FetchService } from './services/fetch.service';
 import { NavbarComponent } from './navbar/navbar.component';
@@ -7,6 +7,8 @@ import { WeekdayComponent } from './weekday/weekday.component';
 import { OfficeLayoutComponent } from './office-layout/office-layout.component';
 import { AdminCreateComponent } from './admin-create/admin-create.component';
 import {Router, RouterOutlet} from '@angular/router';
+import {navAdmin, navUser} from "./models/roomplanner";
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -19,21 +21,5 @@ import {Router, RouterOutlet} from '@angular/router';
   // providers: [FetchService]
 })
 export class AppComponent {
-  info: string = '';
-  error: string | null = null;
-
-  activeRoute = 'today'; // sync with route on init if needed
-  navItems = [
-    { id: 'today', label: 'Today' },
-    { id: 'weekday', label: 'Weekday' },
-    { id: 'layout', label: 'Office Layout' },
-    { id: 'admin-create', label: 'Admin Panel' }, // only if admin
-  ];
-
-  constructor(private router: Router) {}
-
-  navigate(route: string) {
-    this.activeRoute = route;
-    this.router.navigate([route]);
-  }
+  private router = inject(Router);
 }

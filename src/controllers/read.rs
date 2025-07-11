@@ -1,9 +1,8 @@
-use crate::controllers::help_fn::TimeFunctions;
+use crate::models::help_fn::TimeFunctions;
 use crate::models::mrbs_area::{AreaRelatedData, MrbsArea, WeekOverview};
 use crate::models::mrbs_entry::MrbsEntry;
 use crate::response_type::error::ErrorType;
 use crate::response_type::success::ResponseType;
-use axum::routing::get;
 use chrono::{Datelike, Duration, Utc};
 use loco_rs::app::AppContext;
 use loco_rs::controller::Routes;
@@ -92,7 +91,7 @@ pub async fn get_overview_week(
 
 pub fn routes() -> Routes {
     Routes::new()
-        .prefix("/api")
+        .prefix("/api/read")
         .add("/overviewday", post(read_overview_day))
         .add("/overviewweek", post(get_overview_week))
 }

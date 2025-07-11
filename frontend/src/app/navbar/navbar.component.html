@@ -1,13 +1,14 @@
 <nav class="navbar bg-primary navbar-light justify-content-center">
-  <div class="navbar-nav d-flex flex-row">
-    <a
-      *ngFor="let item of navItems"
-      class="nav-link text-white mx-3"
-      [class.active]="menu === item.id"
-      (click)="setActiveItem(item.id)"
-      style="cursor: pointer"
-    >
-      {{ item.label }}
-    </a>
-  </div>
+    <div class="navbar-nav d-flex flex-row">
+        @for (item of navItems; track item.routes) {
+            <a
+                    class="nav-link text-white mx-3"
+                    [routerLink]="item.routes"
+                    routerLinkActive="active"
+                    [routerLinkActiveOptions]="{ exact: true }"
+            >
+                {{ item.label }}
+            </a>
+        }
+    </div>
 </nav>

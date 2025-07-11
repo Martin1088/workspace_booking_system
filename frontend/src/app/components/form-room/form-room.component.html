@@ -1,1 +1,57 @@
-<p>form-room works!</p>
+<div class="bg-info p-3 rounded border border-dark">
+    <h3>Create a New Room {{ areaId }}</h3>
+    <form [formGroup]="roomForm" (ngSubmit)="onSubmit()" novalidate aria-labelledby="roomFormHeading">
+
+      <!-- Success and Error Messages -->
+      <div *ngIf="successMessage" class="alert alert-success" role="alert">{{ successMessage }}</div>
+      <div *ngIf="errorMessage" class="alert alert-danger" role="alert">{{ errorMessage }}</div>
+
+      <!-- Room Name -->
+      <div class="mb-3">
+        <label for="roomName" class="form-label">Room Name <span aria-hidden="true" class="text-danger">*</span></label>
+        <input
+          type="text"
+          id="roomName"
+          class="form-control"
+          formControlName="roomName"
+          [class.is-invalid]="submitted && f['roomName'].invalid"
+          required
+        />
+        <div class="invalid-feedback" *ngIf="submitted && f['roomName'].errors?.['required']">
+          Room name is required.
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea
+          id="description"
+          class="form-control"
+          formControlName="description"
+          rows="3"
+          aria-describedby="descriptionHelp"
+        ></textarea>
+        <div id="descriptionHelp" class="form-text">Optional: describe the room and its purpose.</div>
+      </div>
+
+      <!-- Capacity -->
+      <div class="mb-3">
+        <label for="capacity" class="form-label">Capacity <span aria-hidden="true" class="text-danger">*</span></label>
+        <input
+          type="number"
+          id="capacity"
+          class="form-control"
+          formControlName="capacity"
+          [class.is-invalid]="submitted && f['capacity'].invalid"
+          required
+        />
+        <div class="invalid-feedback" *ngIf="submitted && f['capacity'].errors">
+          <div *ngIf="f['capacity'].errors?.['required']">Capacity is required.</div>
+          <div *ngIf="f['capacity'].errors?.['min']">Minimum capacity is 1.</div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Create Room</button>
+    </form>
+  </div>

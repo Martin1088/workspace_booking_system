@@ -9,4 +9,5 @@ import { Component, Input } from '@angular/core';
   styleUrl: './loading-modal.component.css'
 })
 export class LoadingModalComponent {
+  @Input() message: string = 'Prossessing your request ...';
 }

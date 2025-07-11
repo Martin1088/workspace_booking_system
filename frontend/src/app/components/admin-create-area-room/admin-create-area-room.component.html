@@ -1,13 +1,13 @@
 <div class="d-flex flex-column">
   <app-form-area></app-form-area>
 
-  <div *ngFor="let res of responseMrbs | async" class="card mx-auto">
+  <div *ngFor="let res of responseMrbs" class="card mx-auto">
     <div class="card-body">
       <h3 class="card-title">Edit {{ res.area_name }} (ID: {{ res.id }})</h3>
 
       <button
         class="btn btn-primary mb-3"
-        (click)="openDeleteAreaModal(res)"
+        (click)="deleteSelectedArea(res.area_name, res.id)"
         [disabled]="loading"
       >
         <span *ngIf="loading" class="spinner-border spinner-border-sm"></span>
@@ -28,7 +28,7 @@
                 {{ room.room_name }}
                 <button
                   class="btn btn-primary mb-3"
-                  (click)="openDeleteRoomModal(room)"
+                  (click)="deleteSelectedRoom(room.room_name, room.id)"
                   [disabled]="loading"
                 >
                   <span
@@ -48,7 +48,7 @@
         </table>
       </div>
 
-      <app-form-room></app-form-room>
+      <app-form-room [areaId]="res.id"></app-form-room>
     </div>
   </div>
 </div>
