@@ -3,6 +3,7 @@ use chrono::{offset::Local, Duration};
 use loco_rs::{auth::jwt, hash, prelude::*};
 use serde::{Deserialize, Serialize};
 use serde_json::Map;
+use tracing::debug;
 use uuid::Uuid;
 
 pub use super::_entities::users::{self, ActiveModel, Entity, Model};
@@ -246,8 +247,11 @@ impl Model {
     /// # Errors
     ///
     /// when could not convert user claims to jwt token
-    pub fn generate_jwt(&self, secret: &str, expiration: u64) -> ModelResult<String> {
-        Ok(jwt::JWT::new(secret).generate_token(expiration, String::from_utf8_lossy(&self.pid).to_string(), Map::new())?)
+    pub fn generate_jwt(&self, secret: &str, expiration: &u64) -> ModelResult<String> {
+        debug!("jwt create");
+        let j = jwt::JWT::new(secret).generate_token(expiration.to_owned(), String::from_utf8_lossy(&self.pid).to_string(), Map::new())?;
+        debug!("{:#?}", j);
+        Ok(j)
     }
 }
 

@@ -15,6 +15,7 @@ use std::path::Path;
 
 #[allow(unused_imports)]
 use crate::{controllers, models::_entities::users, tasks, workers::downloader::DownloadWorker};
+use crate::initializers;
 
 pub struct App;
 #[async_trait]
@@ -42,7 +43,11 @@ impl Hooks for App {
     }
 
     async fn initializers(_ctx: &AppContext) -> Result<Vec<Box<dyn Initializer>>> {
-        Ok(vec![])
+        Ok(vec![
+            Box::new(initializers::axum_session::AxumSessionInitializer),
+            Box::new(initializers::oauth2::OAuth2StoreInitializer),
+        ]
+        )
     }
 
     fn routes(_ctx: &AppContext) -> AppRoutes {
@@ -51,6 +56,7 @@ impl Hooks for App {
             .add_route(controllers::update::routes())
             .add_route(controllers::auth::routes())
             .add_route(controllers::read::routes())
+            .add_route(controllers::oauth::routes())
     }
     async fn connect_workers(ctx: &AppContext, queue: &Queue) -> Result<()> {
         queue.register(DownloadWorker::build(ctx)).await?;

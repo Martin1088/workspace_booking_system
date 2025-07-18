@@ -1,3 +1,12 @@
+[env]
+DATABASE_URL="mysql://devuser:devuser@localhost:3320/mrbs"
+OAUTH_CLIENT_ID="workspace-booking"
+OAUTH_CLIENT_SECRET="2shYGe1OXfO2wBDJA5OD6dB29U8UVdWhHzp4N4xFiqilQ9y7Z4HzUEHXaTBWbOTV9b3HeiNk1IGHghi1f1tkr8oGmR2HexUUnDPIWtZQiMHrAkPehtRC3B84UdMaUizT"
+AUTH_URL="http://localhost:9000/application/o/authorize/"
+TOKEN_URL="http://localhost:9000/application/o/token/"
+REDIRECT_URL="http://localhost:5150/api/oauth2/authentik/callback/cookie"
+AUTH_TYPE="request_body"
+RUST_LOG="loco_oauth2=debug,workspace_booking_system=debug"
 [alias]
 loco = "run --"
 loco-tool = "run --"

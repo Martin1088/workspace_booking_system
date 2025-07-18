@@ -5,7 +5,5 @@ pub use super::mrbs_entry::Entity as MrbsEntry;
 pub use super::mrbs_participants::Entity as MrbsParticipants;
 pub use super::mrbs_repeat::Entity as MrbsRepeat;
 pub use super::mrbs_room::Entity as MrbsRoom;
-pub use super::mrbs_sessions::Entity as MrbsSessions;
-pub use super::mrbs_variables::Entity as MrbsVariables;
-pub use super::mrbs_zoneinfo::Entity as MrbsZoneinfo;
+pub use super::o_auth2_sessions::Entity as OAuth2Sessions;
 pub use super::users::Entity as Users;
