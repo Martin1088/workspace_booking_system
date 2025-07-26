@@ -15,6 +15,7 @@
           <div class="d-flex gap-2">
             <button type="submit" class="btn btn-primary">Login</button>
             <a [routerLink]="['/register']" class="btn btn-outline-light">Register</a>
+            <a class="btn btn-outline-light" (click)="onOAuthLogin()">Login Oauth</a>
           </div>
         </form>
       </div>

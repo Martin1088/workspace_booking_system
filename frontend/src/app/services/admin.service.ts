@@ -96,10 +96,9 @@ export class AdminService {
     await this.handleRequest(request$, 'Failed to delete area');
   }
 
-  async updateArea(areaId: number, areaName: string): Promise<void> {
-    const request$ = this.http.post<ResponseMsg>(`${this.apiUrl}updatearea`, {
-      areaId,
-      areaName,
+  async updateArea(area_id: number, area_name: string): Promise<void> {
+    const request$ = this.http.post<ResponseMsg>(`${this.apiUrl}updatearea/${area_id}`, {
+      area_name,
     });
     await this.handleRequest(request$, 'Failed to update area');
   }
@@ -123,11 +122,10 @@ export class AdminService {
 
   async deleteRoom(roomId: number) {
       const request$ = this.http.delete<ResponseMsg>(`${this.apiUrl}deleteroom/${roomId}`);
-      this.fetchService.setInfo(res.message);
     await this.handleRequest(request$, 'Failed to delete room');
   }
 
-  async updateRoom(roomId: number, roomName: string, description: string, capacity: number, areaId: number) {
+  async updateRoom(room_id: number, room_name: string, description: string, capacity: number, area_id: number) {
     const request$ = this.http.post<string>(`${this.apiUrl}updateroom`, {
         room_id,
         area_id,

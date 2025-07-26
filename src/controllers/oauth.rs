@@ -104,12 +104,14 @@ async fn protected(
     // Extract the user from the Cookie via middleware
     user: OAuth2CookieUser<OAuth2UserProfile, users::Model, o_auth2_sessions::Model>,
 ) -> Result<Response, Error> {
+    debug!("{:?}", user);
     let user: &users::Model = user.as_ref();
     let jwt_secret = ctx.config.get_jwt_config()?;
     // Generate a JWT token
     let token = user
         .generate_jwt(&jwt_secret.secret, &jwt_secret.expiration)
         .or_else(|_| unauthorized("unauthorized!"))?;
+    
     // Return the user and the token in JSON format
     format::json(LoginResponse::new(user, &token))
 }

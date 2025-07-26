@@ -79,6 +79,5 @@ pub fn routes() -> Routes {
         .add("/updateroom/{id}", post(update_room))
         .add("/deleteroom/{id}", delete(delete_room))
         .add("/createarea", post(create_area))
-        .add("/update/{id}", post(update_room))
         .add("/deletearea/{id}", delete(delete_area))
 }

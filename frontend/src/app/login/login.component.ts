@@ -21,5 +21,8 @@ export class LoginComponent {
   async onLogin() {
     await this.authService.requestLogin(this.email, this.password);
   }
-
+  async onOAuthLogin() {
+    let url = await this.authService.requestOAuthLogin();
+    window.location.href = url;
+  }
 }

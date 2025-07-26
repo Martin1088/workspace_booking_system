@@ -140,7 +140,7 @@ pub async fn joinrooms_dates(
 }
 
 pub fn routes() -> Routes {
-    Routes::new().prefix("api/updates/")
+    Routes::new().prefix("api/update/")
         .add("/joinroom_id", post(joinroom_id))
         .add("/joinroom_via_entry_id", post(joinroom_via_entry_id))
         .add("/joinrooms_dates", post(joinrooms_dates))

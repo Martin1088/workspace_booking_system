@@ -6,7 +6,7 @@ AUTH_URL="http://localhost:9000/application/o/authorize/"
 TOKEN_URL="http://localhost:9000/application/o/token/"
 REDIRECT_URL="http://localhost:5150/api/oauth2/authentik/callback/cookie"
 AUTH_TYPE="request_body"
-RUST_LOG="loco_oauth2=debug,workspace_booking_system=debug"
+RUST_LOG="loco_oauth2=debug,workspace_booking_system=debug,cookie=debug"
 [alias]
 loco = "run --"
 loco-tool = "run --"

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import {Inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import {BehaviorSubject, firstValueFrom } from 'rxjs';
+import {BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import { LoginResponse } from '../models/roomplanner';
 
 @Injectable({
@@ -57,6 +57,22 @@ export class AuthService {
       alert('Invalid login. Please try again.');
     }
   }
+
+  async requestOAuthLogin() {
+    let res = await firstValueFrom(this.http.get(this.apiUrl + 'oauth2/authentik', {
+      responseType: 'text',
+      withCredentials: true  // include cookies for session tracking
+    }));
+    console.log(res);
+    return res;
+  }
+
+  requestOAuthProtect(): Observable<any> {
+    return this.http.get(this.apiUrl + 'oauth2/protected', {
+      withCredentials: true
+    });
+  }
+
 
   logout() {
     localStorage.clear();

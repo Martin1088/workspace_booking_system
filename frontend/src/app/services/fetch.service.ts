@@ -14,7 +14,8 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 })
 export class FetchService {
   private apiReadUrl: string;
-  private apiUpdatesUrl: string;
+  private apiUpdateUrl: string;
+  private apiDeleteUrl: string;
   private loading = new BehaviorSubject<boolean>(false);
   loading$ = this.loading.asObservable();
 
@@ -29,7 +30,9 @@ export class FetchService {
 
   constructor(private http: HttpClient,
               @Inject('API_BASE_URL') private baseUrl: string) {
-    this.apiReadUrl = this.baseUrl;
+    this.apiReadUrl = this.baseUrl + 'read/';
+    this.apiUpdateUrl = this.baseUrl + 'update/';
+    this.apiDeleteUrl = this.baseUrl + 'delete/';
   }
 
   public setLoading(state: boolean) {
@@ -44,7 +47,7 @@ export class FetchService {
     this.setLoading(true);
     try {
       const date = inputDate ? inputDate.toISOString() : null;
-      const res = await firstValueFrom(this.http.post<ApiMrbsResponse>(this.apiReadUrl + 'read/overviewday', { date }));
+      const res = await firstValueFrom(this.http.post<ApiMrbsResponse>(this.apiReadUrl + 'overviewday', { date }));
       console.log(res.result);
       this.responseMrbs.next(res.result);
     } catch (e) {
@@ -58,7 +61,7 @@ export class FetchService {
     this.setLoading(true);
     try {
       const date = inputDate ? inputDate.toISOString() : null;
-      const res = await firstValueFrom(this.http.post<ApiWeekResponse>(this.apiReadUrl + 'read/overviewweek', { date }));
+      const res = await firstValueFrom(this.http.post<ApiWeekResponse>(this.apiReadUrl + 'overviewweek', { date }));
       this.weekData.next(res.result);
     } catch (e) {
       this.info.next(e as string);
@@ -71,7 +74,7 @@ export class FetchService {
     this.setLoading(true);
     try {
       const params = new HttpParams().set('entryId', id.toString());
-      await firstValueFrom(this.http.delete<string>(this.apiReadUrl + 'participant', { params }));
+      await firstValueFrom(this.http.delete<string>(this.apiDeleteUrl + 'participant', { params }));
       if (week) {
         await this.getOverviewweek(date);
       } else {
@@ -88,7 +91,7 @@ export class FetchService {
     this.setLoading(true);
     try {
       const queryDate = date.toISOString();
-      await firstValueFrom(this.http.post<string>('joinroom', { entryId, roomId, date: queryDate, name: otherUser }));
+      await firstValueFrom(this.http.post<string>(this.apiUpdateUrl + 'joinroom', { entryId, roomId, date: queryDate, name: otherUser }));
 
       if (week) {
         await this.getOverviewweek(date);
@@ -114,7 +117,7 @@ export class FetchService {
       }
 
       console.log(isoVec);
-      const res = await firstValueFrom(this.http.post<WeekResponse>('joinrooms', { roomId: id, payload: isoVec }));
+      const res = await firstValueFrom(this.http.post<WeekResponse>(this.apiUpdateUrl + 'joinrooms', { roomId: id, payload: isoVec }));
       this.weekData.next(res);
     } catch (e) {
       this.info.next(e as string);

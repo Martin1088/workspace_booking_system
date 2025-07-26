@@ -10,7 +10,6 @@ import {GuardService} from './services/guard.service';
 import {LayoutComponent} from './layout/layout.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
 
   // Public
   { path: 'login', component: LoginComponent },
@@ -22,6 +21,7 @@ export const routes: Routes = [
     component: LayoutComponent,
     canActivate: [GuardService],
     children: [
+      { path: '', redirectTo: 'today', pathMatch: 'full'},
       { path: 'today', component: TodayComponent },
       { path: 'weekday', component: WeekdayComponent },
       { path: 'office-layout', component: OfficeLayoutComponent },
