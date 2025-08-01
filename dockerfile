@@ -29,3 +29,4 @@ COPY --from=builder /usr/src/config config
 COPY --from=builder /usr/src/target/release/workspace_booking_system-cli workspace_booking_system-cli
 
 ENTRYPOINT ["/usr/app/workspace_booking_system-cli", "start", "--environment", "production"]
+#ENTRYPOINT ["/usr/app/workspace_booking_system-cli", "start", "--environment", "development"]
