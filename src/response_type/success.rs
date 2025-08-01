@@ -15,6 +15,7 @@ pub enum ResponseType {
     ResultOverviewweek { result: Vec<WeekOverview> },
     CheckUserIfAdmin { isadmin: bool },
     RangeOfDefaultEntries { start: String, end: String },
+    AllUsers{ result: Vec<String> }
 }
 
 impl IntoResponse for ResponseType {
@@ -48,6 +49,10 @@ impl IntoResponse for ResponseType {
                 StatusCode::OK,
                 json!({ "start": start, "end": end }),
             ),
+            ResponseType::AllUsers { result } => (
+                StatusCode::OK,
+                json!({ "result": result }),
+                ),
         };
 
         (status, Json(body)).into_response()

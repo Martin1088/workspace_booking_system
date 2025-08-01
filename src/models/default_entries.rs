@@ -32,29 +32,12 @@ impl EntryOperation for CreateOperation {
             .await?
             .is_none()
         {
-            MrbsEntryActiveModel::set_entry_default(db, current, room_id, room_name, room_capacity).await?;
+            MrbsEntryActiveModel::set_entry_default(db, Some(current), room_id, room_name, room_capacity).await?;
         }
         Ok(())
     }
 }
 
-pub struct DeleteOperation;
-
-impl EntryOperation for DeleteOperation {
-    async fn apply(
-        &self,
-        db: &DatabaseConnection,
-        current: DateTime<FixedOffset>,
-        room_id: i32,
-        _room_name: &str,
-        _room_capacity: i32,
-    ) -> Result<(), Response> {
-        match MrbsEntry::check_entry_roomid(db, room_id, &current.to_rfc3339()).await? {
-            Some(entry_id) => MrbsEntryActiveModel::delete_entry_by_id(db, entry_id).await,
-            None => Ok(()),
-        }
-    }
-}
 
 pub async fn operate_entry<T: EntryOperation>(
     db: &DatabaseConnection,

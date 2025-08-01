@@ -5,6 +5,7 @@ use sea_orm::{QuerySelect, Set};
 use serde::{Deserialize, Serialize};
 use crate::models::_entities::mrbs_participants;
 use crate::response_type::error::ErrorType;
+use crate::response_type::success::ResponseType;
 pub use super::_entities::mrbs_participants::{ActiveModel, Model, Entity};
 pub type MrbsParticipants = Entity;
 pub type MrbsParticipantsActiveModel = ActiveModel;
@@ -38,14 +39,18 @@ impl ActiveModel {
             .map_err(|_error| ErrorType::DBError.into_response())?;
         Ok(())
     }
-    pub async fn delete_participant(db: &DatabaseConnection, entry_id: i32) -> Result<(), Response> {
-        MrbsParticipants::delete_many()
-            .filter(mrbs_participants::Column::EntryId.eq(entry_id))
+    pub async fn delete_participant(
+        db: &DatabaseConnection,
+        participant_id: i32,
+    ) -> Result<Response, Response> {
+        // delete participant in table
+        Entity::delete_by_id(participant_id)
             .exec(db)
             .await
             .map_err(|_error| ErrorType::FailedDelete.into_response())?;
-        Ok(())
+        Ok(ResponseType::SuccessfulDelete.into_response())
     }
+
 }
 
 // implement your custom finders, selectors oriented logic here

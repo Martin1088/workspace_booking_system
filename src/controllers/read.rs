@@ -6,9 +6,10 @@ use crate::response_type::success::ResponseType;
 use chrono::{Datelike, Duration, Utc};
 use loco_rs::app::AppContext;
 use loco_rs::controller::Routes;
-use loco_rs::prelude::{post, IntoResponse, Json, Response, State};
+use loco_rs::prelude::{post, get, IntoResponse, Json, Response, State};
 use sea_orm::DatabaseConnection;
 use serde::{Deserialize, Serialize};
+use crate::models::_entities::users;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct OverviewQuery {
@@ -89,9 +90,22 @@ pub async fn get_overview_week(
     .into_response())
 }
 
+#[axum::debug_handler]
+pub async fn get_users(
+    ctx: State<AppContext>,
+) -> Result<Response, Response> {
+    let db: &DatabaseConnection = &ctx.db;
+    let res: Vec<String> = users::Model::find_all_users(db).await?;
+    Ok(ResponseType::AllUsers {
+        result: res
+    }.into_response())
+}
+
+
 pub fn routes() -> Routes {
     Routes::new()
         .prefix("/api/read")
         .add("/overviewday", post(read_overview_day))
         .add("/overviewweek", post(get_overview_week))
+        .add("/users", get(get_users))
 }

@@ -19,11 +19,11 @@
     class="form-select"
     name="allusers"
     id="allusers"
-    [(ngModel)]="other_user"
+    [(ngModel)]="selectedUser"
   >
-    <option [ngValue]="null" selected>You</option>
-    <option>
-      Test
+    <option [ngValue]="username" selected>You({{ username }})</option>
+    <option *ngFor="let user of users" [ngValue]="user">
+      {{ user }}
     </option>
   </select>
   <small class="form-text">Select another user if needed</small>
@@ -34,7 +34,8 @@
     name="optionuser"
     class="form-control mt-2"
     placeholder="Only to join as other user"
-    [(ngModel)]="other_user"
+    [(ngModel)]="username"
+    [disabled]="!selectedUser"
   />
 </div>
 

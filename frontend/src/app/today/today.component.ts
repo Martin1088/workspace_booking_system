@@ -15,6 +15,8 @@ import { OverviewTableComponent } from '../components/overview-table/overview-ta
 })
 export class TodayComponent implements OnInit {
   responseMrbs: Area[] = [];
+  username: string | null = localStorage.getItem('user');
+  usernames: string[] = [];
   loading: boolean = false;
   info: string = '';
   workingDays: any = workingDays;
@@ -30,9 +32,11 @@ export class TodayComponent implements OnInit {
 
   ngOnInit(): void {
     this.getOverviewday();
+    this.fetchService.getUsers()
     this.fetchService.info$.subscribe(info => this.info = info || '');
     this.fetchService.loading$.subscribe(loading => this.loading = loading);
     this.fetchService.responseMrbs$.subscribe(data => this.responseMrbs = data);
+    this.fetchService.usernames$.subscribe(usernames => this.usernames = usernames);
   }
   onChangeDate(event: Event) {
     const input = event.target as HTMLInputElement;

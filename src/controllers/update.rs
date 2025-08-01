@@ -1,11 +1,11 @@
 use crate::models::help_fn::TimeFunctions;
 use crate::models::mrbs_entry::{MrbsEntry, MrbsEntryActiveModel};
+use crate::models::mrbs_participants::{MrbsParticipants, MrbsParticipantsActiveModel};
 use crate::models::mrbs_room::{MrbsRoom, RoomData};
 use crate::response_type::error::ErrorType;
 use crate::response_type::success::ResponseType;
 use loco_rs::prelude::*;
 use serde::{Deserialize, Serialize};
-use crate::models::mrbs_participants::{MrbsParticipants, MrbsParticipantsActiveModel};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct JoinRoomsQuery {
@@ -17,7 +17,7 @@ pub struct JoinRoomsQuery {
 #[derive(Debug, Deserialize, Serialize)]
 pub struct JoinRoomIdQuery {
     pub room_id: i32,
-    pub date: Vec<String>,
+    pub date: Option<String>,
     pub username: String,
 }
 
@@ -32,24 +32,27 @@ pub async fn joinroom(
     db: &DatabaseConnection,
     entry_id: Option<i32>,
     room_id: Option<i32>,
-    date: Option<Vec<String>>,
+    date: Option<String>,
     username: &str,
 ) -> Result<Response, Response> {
     let entry_id: i32 = match entry_id {
         Some(id_known) => id_known,
         None => match MrbsRoom::find_by_room_id(db, room_id.unwrap()).await? {
-            Some(d) => {
+            Some(data) => {
                 MrbsEntryActiveModel::set_entry_default(
                     db,
-                    chrono::DateTime::parse_from_rfc3339(&TimeFunctions::handle_vec_rfc3339(
-                        date.clone(),
-                    )?)
-                        .map_err(|_| ErrorType::GivenTimeIsNotRCF3339.into_response())?,
+                    match date {
+                        Some(d) => Some(
+                            chrono::DateTime::parse_from_rfc3339(&d)
+                                .map_err(|_| ErrorType::GivenTimeIsNotRCF3339.into_response())?,
+                        ),
+                        None => None,
+                    },
                     room_id.unwrap(),
-                    &d.room_name,
-                    d.capacity,
+                    &data.room_name,
+                    data.capacity,
                 )
-                    .await?
+                .await?
             }
             None => Err(ErrorType::DBError.into_response())?,
         },
@@ -64,8 +67,8 @@ pub async fn joinrooms(
     query_days: Vec<String>,
     username: &str,
 ) -> Result<Response, Response> {
-    for d in query_days {
-        let result: (i32, i32) = TimeFunctions::rfc3339_to_unixtimestamp(&d)
+    for date in query_days {
+        let result: (i32, i32) = TimeFunctions::rfc3339_to_unixtimestamp(&date)
             .map_err(|_error| ErrorType::GivenTimeIsNotRCF3339.into_response())?;
         let entry_id: Option<i32> =
             MrbsEntry::get_entry_id_by_day_range(db, room_id, result).await?;
@@ -80,13 +83,15 @@ pub async fn joinrooms(
                     .ok_or(ErrorType::DBError.into_response())?;
                 let entry_id = MrbsEntryActiveModel::set_entry_default(
                     db,
-                    chrono::DateTime::parse_from_rfc3339(&d)
-                        .map_err(|_e| ErrorType::GivenTimeIsNotRCF3339.into_response())?,
+                    Some(
+                        chrono::DateTime::parse_from_rfc3339(&date)
+                            .map_err(|_| ErrorType::GivenTimeIsNotRCF3339.into_response())?,
+                    ),
                     room_id,
                     &data.room_name,
                     data.capacity,
                 )
-                    .await?;
+                .await?;
                 set_join_for_room(db, entry_id, username).await?;
             }
         }
@@ -120,7 +125,14 @@ pub async fn joinroom_id(
     State(ctx): State<AppContext>,
     Json(params): Json<JoinRoomIdQuery>,
 ) -> std::result::Result<Response, Response> {
-    Ok(joinroom(&ctx.db, None, Some(params.room_id.clone()), Some(params.date.clone()), &params.username).await?)
+    Ok(joinroom(
+        &ctx.db,
+        None,
+        Some(params.room_id.clone()),
+        params.date.clone(),
+        &params.username,
+    )
+    .await?)
 }
 
 #[axum::debug_handler]
@@ -128,7 +140,14 @@ pub async fn joinroom_via_entry_id(
     State(ctx): State<AppContext>,
     Json(params): Json<JoinRoomViaEntryIdQuery>,
 ) -> std::result::Result<Response, Response> {
-    Ok(joinroom(&ctx.db, Some(params.entry_id.clone()), None, None, &params.username).await?)
+    Ok(joinroom(
+        &ctx.db,
+        Some(params.entry_id.clone()),
+        None,
+        None,
+        &params.username,
+    )
+    .await?)
 }
 
 #[axum::debug_handler]
@@ -136,11 +155,18 @@ pub async fn joinrooms_dates(
     State(ctx): State<AppContext>,
     Json(params): Json<JoinRoomsQuery>,
 ) -> std::result::Result<Response, Response> {
-    Ok(joinrooms(&ctx.db, params.room_id.clone(), params.dates.clone(), &params.username).await?)
+    Ok(joinrooms(
+        &ctx.db,
+        params.room_id.clone(),
+        params.dates.clone(),
+        &params.username,
+    )
+    .await?)
 }
 
 pub fn routes() -> Routes {
-    Routes::new().prefix("api/update/")
+    Routes::new()
+        .prefix("api/update/")
         .add("/joinroom_id", post(joinroom_id))
         .add("/joinroom_via_entry_id", post(joinroom_via_entry_id))
         .add("/joinrooms_dates", post(joinrooms_dates))

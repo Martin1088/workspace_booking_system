@@ -55,3 +55,7 @@ loco-rs = { workspace = true, features = ["testing"] }
 serial_test = { version = "3.1.1" }
 rstest = { version = "0.21.0" }
 insta = { version = "1.34.0", features = ["redactions", "yaml", "filters"] }
+
+[dependencies.openssl]
+version = "0.10"
+features = ["vendored"]

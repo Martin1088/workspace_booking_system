@@ -29,6 +29,11 @@ export interface Area {
 export interface ApiMrbsResponse {
   result: Area[];
 }
+
+export interface Users {
+  result: string[];
+}
+
 export type MrbsResponse = Area[];
 
 export interface WeekData {

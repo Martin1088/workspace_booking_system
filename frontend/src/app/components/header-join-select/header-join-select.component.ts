@@ -18,7 +18,8 @@ export class HeaderJoinSelectComponent {
   @Input() weekOrDay!: boolean;
 
   select_room!: Room | null;
-  other_user: string | null = null;
+  username: string | null = localStorage.getItem('user');
+  selectedUser: string | null = null;
   loading = false;
 
   constructor(private fetchService: FetchService) { }
@@ -30,9 +31,16 @@ export class HeaderJoinSelectComponent {
     }
 
     const selectedDate = new Date(this.cardDate);
+    const finalUser = this.selectedUser ?? this.username;
     this.loading = true;
 
-    this.fetchService.setJoin(this.select_room.id, this.select_room.entry_id, selectedDate, this.weekOrDay, this.other_user)
+    this.fetchService.setJoin(
+      this.select_room.id,
+      this.select_room.entry_id,
+      selectedDate,
+      this.weekOrDay,
+      finalUser,
+    )
       .then(() => this.loading = false)
       .catch(() => this.loading = false);
   }

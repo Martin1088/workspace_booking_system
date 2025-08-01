@@ -1,4 +1,4 @@
-<h2 class="text-center my-4">Welcome Tester</h2>
+<h2 class="text-center my-4">Welcome {{ username }}</h2>
 
 @if (!loading) {
   <div>
@@ -21,6 +21,7 @@
             <div class="bg-info p-3 rounded border border-dark">
               <app-header-join-select
                 [res]="res.rooms"
+                [users]="usernames"
                 [cardDate]="date.toISOString()"
                 [weekOrDay]="weekOrDay"
               ></app-header-join-select>

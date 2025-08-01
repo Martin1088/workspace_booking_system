@@ -52,7 +52,8 @@ export class GuardService implements CanActivate {
         console.log(res);
         // Save token/admin in localStorage if needed
         localStorage.setItem('token', res.token);
-        localStorage.setItem('admin', JSON.stringify(res.user?.is_admin ?? false));
+        localStorage.setItem('admin', JSON.stringify(res.is_admin ?? false));
+        localStorage.setItem('user', res.name);
 
         const token = localStorage.getItem('token');
         const adminString = localStorage.getItem('admin');

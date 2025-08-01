@@ -1,11 +1,12 @@
 use async_trait::async_trait;
 use chrono::{offset::Local, Duration};
 use loco_rs::{auth::jwt, hash, prelude::*};
+use sea_orm::QuerySelect;
 use serde::{Deserialize, Serialize};
 use serde_json::Map;
 use tracing::debug;
 use uuid::Uuid;
-
+use crate::response_type::error::ErrorType;
 pub use super::_entities::users::{self, ActiveModel, Entity, Model};
 
 pub const MAGIC_LINK_LENGTH: i8 = 32;
@@ -64,6 +65,21 @@ impl Authenticable for Model {
 }
 
 impl Model {
+    /// finds all users 
+    ///
+    /// # Errors
+    ///
+    /// When could not find users DB query error
+    pub async fn find_all_users(db: &DatabaseConnection) -> Result<Vec<String>, Response> {
+         users::Entity::find()
+            .select_only()
+            .column(users::Column::Name)
+            .into_tuple::<String>()
+            .all(db)
+            .await
+            .map_err(|e| ErrorType::DBError.into_response())
+    }
+    
     /// finds a user by the provided email
     ///
     /// # Errors
