@@ -19,7 +19,7 @@ server:
   # Port on which the server will listen. the server binding is 0.0.0.0:{PORT}
   port: 5150
   # Binding for the server (which interface to bind to)
-  binding: localhost
+  binding: 0.0.0.0
   # The UI hostname or IP address that mailers will point to.
   host: http://localhost
   # Out of the box middleware configuration. to disable middleware you can changed the `enable` field to `false` of comment the middleware block
@@ -78,7 +78,7 @@ initializers:
         client_credentials:
           client_id: {{get_env(name="OAUTH_CLIENT_ID", default="workspace-booking")}} # Replace with your OAuth2 client ID.
           client_secret: {{get_env(name="OAUTH_CLIENT_SECRET", default="2shYGe1OXfO2wBDJA5OD6dB29U8UVdWhHzp4N4xFiqilQ9y7Z4HzUEHXaTBWbOTV9b3HeiNk1IGHghi1f1tkr8oGmR2HexUUnDPIWtZQiMHrAkPehtRC3B84UdMaUizT")}} # Replace with your OAuth2 client secret.
-          auth_type: request_body
+          auth_type: basic
         url_config:
           auth_url: {{get_env(name="AUTH_URL", default="http://localhost:9000/application/o/authorize/")}} # authorization endpoint from the provider
           token_url: {{get_env(name="TOKEN_URL", default="http://localhost:9000/application/o/token/")}} # token endpoint from the provider for exchanging the authorization code for an access token
@@ -92,7 +92,7 @@ initializers:
           protected_url: {{get_env(name="PROTECTED_URL", default="http://localhost:5150/")}} # Optional for jwt - For redirecting to protect url in cookie to prevent XSS attack
           cookie_secure: false
           cookie_path: "/"
-          cookie_domain: None
+          cookie_domain: localhost
           cookie_http_only: true
           cookie_same_site: None
         timeout_seconds: 600 # Optional, default 600 seconds

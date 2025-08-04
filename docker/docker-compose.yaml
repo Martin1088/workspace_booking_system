@@ -9,6 +9,7 @@ services:
     environment:
       # SeaORM connection URL
       DATABASE_URL: mysql://worker:worker@db:3306/mrbs
+    env_file: .env
     ports:
       - "5150:5150"
     command: []
