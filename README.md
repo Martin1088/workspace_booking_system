@@ -35,44 +35,16 @@ A full-stack **workspace booking management system** built with **Rust (Loco + S
 
 ## Architecture
 
-```mermaid
-flowchart LR
-    A[Angular Frontend] -->|REST API| B[Rust Loco Backend]
-    B -->|ORM| C[(MySQL Database)]
-    B -->|OAuth 2.0| D[OAuth Provider]
-```
+![Architecture](docu/assets/Architecture-Workspace-Booking-System.png)
 
-OAuth Flow
+## OAuth Flow
 
-```mermaid
-sequenceDiagram
-    participant U as User
-    participant F as Angular Frontend
-    participant B as Rust Backend
-    participant O as OAuth Provider
-
-    U->>F: Click "Login with OAuth"
-    F->>O: Redirect to OAuth Provider
-    O->>U: Authenticate User
-    O->>F: Return Auth Code
-    F->>B: Exchange Auth Code for Token
-    B->>O: Validate Token
-    O->>B: Token Valid
-    B->>F: Session Token (JWT)
-    F->>U: Logged In
-```
-
+![OAuth](docu/assets/OAuth-0.png)
 ⸻
 
-Project Structure
+## Project Structure
 
-workingspace_booking_system/
-├── src/               # Rust Loco + SeaORM API
-├── frontend/          # Angular + Bootstrap UI
-├── migration/         # MySQL schema and migrations
-└── README.md
-
-
+![Structure](docu/assets/Structure-0.png)
 ⸻
 
 Installation & Setup
@@ -85,21 +57,21 @@ Prerequisites
 
 Steps
 	1.	Clone Repository
-
+```
 git clone https://github.com/Martin1088/workingspace_booking_system.git
 cd workingspace_booking_system
-
+```
 
 	2.	Backend Setup
-
+```
 cargo loco start
-
+```
 
 	3.	Frontend Setup
-
+```
 cd ../frontend
 npm build
-
+```
 
 	4.	Database
 	•	Create a MySQL database and update connection details in config/development.yaml configuration.
@@ -107,7 +79,7 @@ npm build
 	5.	OAuth
 	•	Configure OAuth credentials in config/development.yaml .env.
 
-⸻
+---
 
 Docker Setup (Optional)
 
@@ -116,9 +88,9 @@ Prerequisites
 	•	Docker Compose
 
 Run with Docker Compose
-
+```
 docker-compose up --build
-
+```
 This will start:
 	•	Rust backend API
 	•	Angular frontend
@@ -126,19 +98,18 @@ This will start:
 
 Update .env files before running.
 
-⸻
+---
 
-API Endpoints (Sample)
+API Endpoints
 	•	POST /auth/login - OAuth login
 	•	GET /
 	•	POST /
 	•	GET /
 
-⸻
+---
 
 License
 
 MIT License
 
 ---
-
