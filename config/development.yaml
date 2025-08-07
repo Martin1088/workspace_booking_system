@@ -19,7 +19,7 @@ server:
   # Port on which the server will listen. the server binding is 0.0.0.0:{PORT}
   port: 5150
   # Binding for the server (which interface to bind to)
-  binding: localhost
+  binding: 0.0.0.0
   # The UI hostname or IP address that mailers will point to.
   host: http://localhost
   # Out of the box middleware configuration. to disable middleware you can changed the `enable` field to `false` of comment the middleware block
@@ -92,7 +92,7 @@ initializers:
           protected_url: {{get_env(name="PROTECTED_URL", default="http://localhost:5150/")}} # Optional for jwt - For redirecting to protect url in cookie to prevent XSS attack
           cookie_secure: false
           cookie_path: "/"
-          cookie_domain: null
+          cookie_domain: localhost
           cookie_http_only: true
           cookie_same_site: None
         timeout_seconds: 600 # Optional, default 600 seconds

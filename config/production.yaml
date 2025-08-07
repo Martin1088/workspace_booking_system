@@ -5,7 +5,7 @@ logger:
   # Enable or disable logging.
   enable: true
   # Enable pretty backtrace (sets RUST_BACKTRACE=1)
-  pretty_backtrace: true
+  pretty_backtrace: false
   # Log level, options: trace, debug, info, warn or error.
   level: info
   # Define the logging format. options: compact, pretty or json
@@ -34,28 +34,6 @@ server:
         uri: "/"
         path: "frontend/dist/frontend/browser"
       fallback: "frontend/dist/frontend/browser/index.html"
-# Mailer Configuration.
-mailer:
-  # SMTP mailer configuration.
-  smtp:
-    # Enable/Disable smtp mailer.
-    enable: true
-    # SMTP server host. e.x localhost, smtp.gmail.com
-    host: localhost
-    # SMTP server port
-    port: 1025
-    # Use secure connection (SSL/TLS).
-    secure: false
-    # auth:
-    #   user:
-    #   password:
-    # Override the SMTP hello name (default is the machine's hostname)
-    # hello_name:
-
-
-# Worker Configuration
-workers:
-  mode: BackgroundAsync
 
 initializers:
   oauth2:
@@ -110,6 +88,6 @@ auth:
   # JWT authentication
   jwt:
     # Secret key for token generation and verification
-    secret: ksF7UxOeIIZdk0b03VJE
+    secret: {{get_env(name="JWT_SECRET", default="ksF7UxOeIIZdk0b03VJE")}}
     # Token expiration time in seconds
     expiration: 604800 # 7 days
