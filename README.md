@@ -40,12 +40,11 @@ flowchart LR
     A[Angular Frontend] -->|REST API| B[Rust Loco Backend]
     B -->|ORM| C[(MySQL Database)]
     B -->|OAuth 2.0| D[OAuth Provider]
-
-
-⸻
+```
 
 OAuth Flow
 
+```mermaid
 sequenceDiagram
     participant U as User
     participant F as Angular Frontend
@@ -61,7 +60,7 @@ sequenceDiagram
     O->>B: Token Valid
     B->>F: Session Token (JWT)
     F->>U: Logged In
-
+```
 
 ⸻
 
