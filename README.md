@@ -1,7 +1,6 @@
 # Working Space Booking System
 
 ![Build](https://img.shields.io/github/actions/workflow/status/Martin1088/workingspace_booking_system/ci.yml?branch=main)
-![License](https://img.shields.io/github/license/Martin1088/workingspace_booking_system)
 ![Rust](https://img.shields.io/badge/Rust-1.80+-orange)
 ![Angular](https://img.shields.io/badge/Angular-17+-red)
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-5-blue)
@@ -47,21 +46,20 @@ A full-stack **workspace booking management system** built with **Rust (Loco + S
 ![Structure](docu/assets/Structure-0.png)
 ⸻
 
-Installation & Setup
+# Installation & Setup
 
-Prerequisites
+## Prerequisites
 	•	Rust (latest stable)
 	•	Node.js & npm
 	•	MySQL server
 	•	OAuth credentials from your provider
 
-Steps
+# Steps
 	1.	Clone Repository
 ```
 git clone https://github.com/Martin1088/workingspace_booking_system.git
 cd workingspace_booking_system
 ```
-
 	2.	Backend Setup
 ```
 cargo loco start
