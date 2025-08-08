@@ -10,7 +10,8 @@ A full-stack **workspace booking management system** built with **Rust (Loco + S
 the frontend, **Bootstrap** for UI styling, **MySQL** for database storage, and **OAuth** for secure login.
 
 ---
-
+![preview](docu/assets/Preview.png)
+---
 ## Features
 
 - **Workspace Booking**: Users can browse, book, and manage workspaces.
@@ -125,11 +126,63 @@ npm build
 
 # API Endpoints
 
-POST /auth/login - OAuth login
-GET /
-POST /
-GET /
+## 🔐 Authentication
 
+| Method | Endpoint                               | Description                    |
+|--------|----------------------------------------|--------------------------------|
+| POST   | `/api/auth/register`                   | Register new user             |
+| POST   | `/api/auth/login`                      | Login with OAuth              |
+| GET    | `/api/auth/verify/{token}`             | Verify email/token            |
+| POST   | `/api/auth/forgot`                     | Request password reset        |
+| POST   | `/api/auth/reset`                      | Reset password                |
+| GET    | `/api/auth/current`                    | Get current user info         |
+| POST   | `/api/auth/magic-link`                 | Request login via magic link  |
+| GET    | `/api/auth/magic-link/{token}`         | Authenticate with magic link  |
+
+---
+
+## 🔐 OAuth Integration
+
+| Method | Endpoint                                              | Description                   |
+|--------|-------------------------------------------------------|-------------------------------|
+| GET    | `/api/oauth2/authentik`                               | Start OAuth login             |
+| GET    | `/api/oauth2/authentik/callback/cookie`               | Callback for Authentik login  |
+| GET    | `/api/oauth2/protected`                               | Access protected resource     |
+
+---
+
+## 🏢 Admin: Room & Area Management
+
+| Method | Endpoint                               | Description                    |
+|--------|----------------------------------------|--------------------------------|
+| POST   | `/api/admin/createroom`                | Create a new room              |
+| POST   | `/api/admin/updateroom/{id}`           | Update existing room           |
+| DELETE | `/api/admin/deleteroom/{id}`           | Delete room                    |
+| POST   | `/api/admin/createarea`                | Create new area                |
+| DELETE | `/api/admin/deletearea/{id}`           | Delete area                    |
+
+---
+
+## 📆 Booking & Overview
+
+| Method | Endpoint                               | Description                            |
+|--------|----------------------------------------|----------------------------------------|
+| DELETE | `/api/delete/joinroom/{id}`            | Cancel a room booking                  |
+| POST   | `/api/update/joinroom_id`              | Update booking by room ID              |
+| POST   | `/api/update/joinroom_via_entry_id`    | Update booking by entry ID             |
+| POST   | `/api/update/joinrooms_dates`          | Update multiple booking dates          |
+| POST   | `/api/read/overviewday`                | Daily booking overview                 |
+| POST   | `/api/read/overviewweek`               | Weekly booking overview                |
+| GET    | `/api/read/users`                      | Retrieve list of users                 |
+
+---
+
+## 🧪 Utility
+
+| Method | Endpoint     | Description            |
+|--------|--------------|------------------------|
+| GET    | `/_ping`     | Ping check             |
+| GET    | `/_health`   | Health check           |
 ---
 
 License
