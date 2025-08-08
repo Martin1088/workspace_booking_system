@@ -6,7 +6,8 @@
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-5-blue)
 ![MySQL](https://img.shields.io/badge/MySQL-8-blue)
 
-A full-stack **workspace booking management system** built with **Rust (Loco + SeaORM)** on the backend, **Angular** for the frontend, **Bootstrap** for UI styling, **MySQL** for database storage, and **OAuth** for secure login.
+A full-stack **workspace booking management system** built with **Rust (Loco + SeaORM)** on the backend, **Angular** for
+the frontend, **Bootstrap** for UI styling, **MySQL** for database storage, and **OAuth** for secure login.
 
 ---
 
@@ -17,8 +18,8 @@ A full-stack **workspace booking management system** built with **Rust (Loco + S
 - **Modern UI**: Built with Angular and styled using Bootstrap.
 - **Database Integration**: Uses MySQL as the primary data store.
 - **Rust Backend**:
-  - **Loco** framework for robust API development.
-  - **SeaORM** for database ORM and query management.
+    - **Loco** framework for robust API development.
+    - **SeaORM** for database ORM and query management.
 - **RESTful API**: Well-structured endpoints for frontend-backend communication.
 
 ---
@@ -49,60 +50,85 @@ A full-stack **workspace booking management system** built with **Rust (Loco + S
 # Installation & Setup
 
 ## Prerequisites
-	•	Rust (latest stable)
-	•	Node.js & npm
-	•	MySQL server
-	•	OAuth credentials from your provider
 
-# Steps
-	1.	Clone Repository
+- Rust (latest stable)
+- Node.js & npm
+- MySQL server
+- OAuth credentials from your provider
+
+# Docker Setup
+
+## Prerequisites
+
+- Build your docker image
+- Run with Docker Compose
+
+```
+docker-compose up --build
+```
+
+This will start:
+• Rust backend API
+• Angular frontend
+• MySQL database
+
+Update .env files before running. Example with Authentik please customize.
+```
+OAUTH_CLIENT_ID="workspace-booking"
+OAUTH_CLIENT_SECRET=""
+AUTH_URL="http://localhost:9000/application/o/authorize/"
+TOKEN_URL="http://localhost:9000/application/o/token/"
+REDIRECT_URL="http://localhost:5150/api/oauth2/authentik/callback/cookie"
+PROFILE_URL="http://localhost:9000/application/o/userinfo/"
+PROTECTED_URL="http://localhost:5150/"
+
+```
+---
+
+
+# Development
+## Steps
+
+1. Clone Repository
+
 ```
 git clone https://github.com/Martin1088/workingspace_booking_system.git
 cd workingspace_booking_system
 ```
-	2.	Backend Setup
+
+3. Database
+- Create a MySQL database and update connection details in config/development.yaml configuration.
+- Setup database mrbs
+```
+mysql -u root mrbs < backup.sql
+```
+- Run migrations (SeaORM).
+
+4. OAuth
+- Configure OAuth credentials in config/development.yaml .env.
+
+5. Backend Setup
+
 ```
 cargo loco start
 ```
 
-	3.	Frontend Setup
+
+6. Frontend Setup
+
 ```
 cd ../frontend
 npm build
 ```
 
-	4.	Database
-	•	Create a MySQL database and update connection details in config/development.yaml configuration.
-	•	Run migrations (SeaORM).
-	5.	OAuth
-	•	Configure OAuth credentials in config/development.yaml .env.
-
 ---
 
-Docker Setup (Optional)
+# API Endpoints
 
-Prerequisites
-	•	Docker
-	•	Docker Compose
-
-Run with Docker Compose
-```
-docker-compose up --build
-```
-This will start:
-	•	Rust backend API
-	•	Angular frontend
-	•	MySQL database
-
-Update .env files before running.
-
----
-
-API Endpoints
-	•	POST /auth/login - OAuth login
-	•	GET /
-	•	POST /
-	•	GET /
+POST /auth/login - OAuth login
+GET /
+POST /
+GET /
 
 ---
 
