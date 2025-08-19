@@ -122,7 +122,12 @@ export class FetchService {
     }
   }
 
-  async setJoins(id: number, weekdays: number[], repeatWeeks: number): Promise<void> {
+  async setJoins(
+    room_id: number | null,
+    weekdays: number[],
+    repeatWeeks: number,
+    username: string | null,
+  ): Promise<void> {
     this.setLoading(true);
     try {
       let isoVec: string[] = [];
@@ -134,8 +139,11 @@ export class FetchService {
       }
 
       console.log(isoVec);
-      const res = await firstValueFrom(this.http.post<WeekResponse>(this.apiUpdateUrl + 'joinrooms', { roomId: id, payload: isoVec }));
-      this.weekData.next(res);
+      await firstValueFrom(
+        this.http.post<string>(
+          this.apiUpdateUrl + 'joinrooms_dates', { room_id, dates: isoVec, username }
+        )
+      );
     } catch (e) {
       this.info.next(e as string);
     } finally {

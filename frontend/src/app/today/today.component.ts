@@ -58,7 +58,7 @@ export class TodayComponent implements OnInit {
     await this.fetchService.getOverviewday(this.date);
   }
 
-  setJoins() {
-    this.fetchService.setJoins(this.booking_roomid, this.bookingdays, this.repeat_weeks);
+  async setJoins() {
+    await this.fetchService.setJoins(this.booking_roomid, this.bookingdays, this.repeat_weeks, this.username);
   }
 }
