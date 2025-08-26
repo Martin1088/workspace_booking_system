@@ -18,6 +18,7 @@ use crate::models::oauth_user::OAuth2UserProfile;
 use crate::views::auth::LoginResponse;
 use oauth2::{AuthorizationCode, TokenResponse};
 use serde::Deserialize;
+use tracing::info;
 
 pub async fn authentik_authorization_url(
     session: Session<SessionMySqlPool>,
@@ -66,6 +67,7 @@ pub async fn authentik_callback_cookie(
     jar: OAuth2PrivateCookieJar,
     Extension(oauth2_store): Extension<OAuth2ClientStore>,
 ) -> Result<impl IntoResponse, Error> {
+    info!("cookie: {:?}", session);
     let mut client = oauth2_store
         .get_authorization_code_client("authentik")
         .await
@@ -98,6 +100,7 @@ async fn protected(
     // Extract the user from the Cookie via middleware
     user: OAuth2CookieUser<OAuth2UserProfile, users::Model, o_auth2_sessions::Model>,
 ) -> Result<Response, Error> {
+    info!("user: {:?}", user);
     let user: &users::Model = user.as_ref();
     // groups check for admin
     
