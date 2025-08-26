@@ -4,6 +4,7 @@ import {AuthService} from '../services/auth.service';
 import {Router, RouterOutlet} from '@angular/router';
 import {NavbarComponent} from '../navbar/navbar.component';
 import {FetchService} from '../services/fetch.service';
+import {AdminService} from '../services/admin.service';
 
 @Component({
   selector: 'app-layout',
@@ -18,13 +19,11 @@ export class LayoutComponent {
   isAdmin = false;
   info: string = "";
 
-  constructor(private authService: AuthService, private fetchService: FetchService) {
-    this.authService.isAdmin$.subscribe(admin => {
-      this.isAdmin = admin;
-    });
+  constructor(private fetchService: FetchService, private adminService: AdminService) {
     this.fetchService.info$.subscribe(info => {
       this.info = info ?? '';
     });
+    this.isAdmin = this.adminService.getAdminValue();
   }
 
 // List of routes where navbar should be hidden

@@ -1,3 +1,4 @@
+use std::collections::HashSet;
 use serde::{Deserialize, Serialize};
 use rand::{thread_rng, Rng};
 use itertools::Itertools;
@@ -83,6 +84,7 @@ impl OAuth2UserTrait<OAuth2UserProfile> for Model {
                 // We use the sub field as the user fake password since sub is unique
                 let password_hash =
                     hash::hash_password(&password).map_err(|e| ModelError::Any(e.into()))?;
+                // Admin check
                 // Create the user into the database
                 users::ActiveModel {
                     email: ActiveValue::set(profile.email.to_string()),
@@ -91,6 +93,18 @@ impl OAuth2UserTrait<OAuth2UserProfile> for Model {
                     password: ActiveValue::set(password_hash),
                     pid: ActiveValue::set(Uuid::new_v4().as_bytes().to_vec()),
                     api_key: ActiveValue::set(Uuid::new_v4().to_string()),
+                    is_admin: ActiveValue::set(
+                        match &profile.groups {
+                            Some(groups) => {
+                                let allow = admin_groups_from_env();
+                                let admin_flag = groups.iter().any(|g|
+                                    allow.iter().any(|a| a.eq(g.trim()))
+                                );
+                                Some(if admin_flag { 1 } else { 0 })
+                            },
+                            None => None,
+                        }
+                    ),
                     ..Default::default()
                 }
                     .insert(&txn)
@@ -142,4 +156,13 @@ fn generate_password(length: usize) -> String {
     
     password.shuffle(&mut rng);
     password.iter().collect()
+}
+
+fn admin_groups_from_env() -> HashSet<String> {
+    std::env::var("ADMIN_GROUPS")
+        .unwrap_or_default()
+        .split(',')
+        .map(|s| s.trim().to_string())
+        .filter(|s| !s.is_empty())
+        .collect()
 }

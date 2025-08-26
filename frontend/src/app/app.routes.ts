@@ -10,29 +10,19 @@ import {GuardService} from './services/guard.service';
 import {LayoutComponent} from './layout/layout.component';
 
 export const routes: Routes = [
-
-  // Public
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
-
-  // Protected Routes
   {
     path: '',
     component: LayoutComponent,
     canActivate: [GuardService],
     children: [
-      { path: '', redirectTo: 'today', pathMatch: 'full'},
+      { path: '', redirectTo: 'today', pathMatch: 'full' },
       { path: 'today', component: TodayComponent },
       { path: 'weekday', component: WeekdayComponent },
       { path: 'office-layout', component: OfficeLayoutComponent },
-      {
-        path: 'admin-create',
-        component: AdminCreateComponent,
-        canActivate: [GuardService],
-        data: { adminOnly: true },
-      },
-    ]
+      { path: 'admin-create', component: AdminCreateComponent, data: { adminOnly: true } },
+    ],
   },
-
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
   { path: '**', redirectTo: 'login' },
 ];

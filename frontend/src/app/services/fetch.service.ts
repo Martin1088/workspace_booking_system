@@ -123,7 +123,7 @@ export class FetchService {
   }
 
   async setJoins(
-    room_id: number | null,
+    room_id: number,
     weekdays: number[],
     repeatWeeks: number,
     username: string | null,
@@ -141,7 +141,11 @@ export class FetchService {
       console.log(isoVec);
       await firstValueFrom(
         this.http.post<string>(
-          this.apiUpdateUrl + 'joinrooms_dates', { room_id, dates: isoVec, username }
+          this.apiUpdateUrl + 'joinrooms_dates', {
+            room_id: room_id == null ? null : Number(room_id),
+            dates: isoVec,
+            username
+          }
         )
       );
     } catch (e) {
@@ -161,4 +165,3 @@ export class FetchService {
     }
   }
 }
-

@@ -3,17 +3,16 @@ import {Inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import {BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import { LoginResponse } from '../models/roomplanner';
+import {AdminService} from './admin.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private _isAdmin = new BehaviorSubject<boolean>(false);
-  isAdmin$ = this._isAdmin.asObservable();
   private apiUrl: String;
 
   constructor(private http: HttpClient,
-              @Inject('API_BASE_URL') private baseUrl: string, private router: Router) {
+              @Inject('API_BASE_URL') private baseUrl: string, private router: Router, private adminService: AdminService) {
     this.apiUrl = this.baseUrl;
   }
 
@@ -44,7 +43,7 @@ export class AuthService {
       localStorage.setItem('token', res.token);
       localStorage.setItem('user', JSON.stringify(res.name));
       localStorage.setItem('admin', JSON.stringify(res.is_admin));
-      this._isAdmin.next(res.is_admin);
+      this.adminService.setAdmin(res.is_admin);
 
       if (res.is_admin) {
         this.router.navigate(['/admin-create']);
@@ -76,7 +75,6 @@ export class AuthService {
 
   logout() {
     localStorage.clear();
-    this._isAdmin.next(false);
     this.router.navigate(['/login']);
   }
 }

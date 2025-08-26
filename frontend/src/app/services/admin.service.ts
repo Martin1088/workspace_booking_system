@@ -13,6 +13,15 @@ import {FetchService} from './fetch.service';
 export class AdminService {
   private apiUrl: String;
   private info: string = "";
+  private isAdmin = new BehaviorSubject<boolean>(false);
+  isAdmin$ = this.isAdmin.asObservable();
+  public setAdmin(isAdmin: boolean) {
+    this.isAdmin.next(isAdmin);
+  }
+
+  public getAdminValue(): boolean {
+    return this.isAdmin.value;
+  }
 
   private firstAvailableEntry = new BehaviorSubject<string | null>(null);
   firstAvailableEntry$ = this.firstAvailableEntry.asObservable();
