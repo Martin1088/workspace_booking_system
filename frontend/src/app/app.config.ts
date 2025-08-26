@@ -1,13 +1,14 @@
-import { ApplicationConfig } from "@angular/core";
+import { ApplicationConfig, InjectionToken } from "@angular/core";
 import { provideHttpClient } from '@angular/common/http';
 import {provideRouter} from "@angular/router";
 import {routes} from './app.routes';
+import {API_BASE_URL} from './api-base-url.token';
 
-export const API_BASE_URL = 'http://localhost:5150/api/';
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     provideHttpClient(),
-    { provide: 'API_BASE_URL', useValue: API_BASE_URL }
+    { provide: 'API_BASE_URL', useValue: '/api/' }
   ],
 };

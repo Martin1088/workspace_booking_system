@@ -1,7 +1,7 @@
 import {Inject, Injectable} from '@angular/core';
 import {RangeOfDefaultEntries, ResponseMsg} from '../models/roomplanner';
 import {BehaviorSubject, firstValueFrom, Observable} from 'rxjs';
-import {API_BASE_URL} from '../app.config'
+import {API_BASE_URL} from '../api-base-url.token';
 
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {FetchService} from './fetch.service';

@@ -5,7 +5,7 @@ import {
   WeekResponse,
   ApiWeekResponse, ApiMrbsResponse, Users
 } from '../models/roomplanner';
-import { API_BASE_URL } from '../app.config'
+import {API_BASE_URL} from '../api-base-url.token';
 import { Injectable, Inject } from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 
