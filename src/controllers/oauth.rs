@@ -33,6 +33,7 @@ pub async fn authentik_authorization_url(
         })?;
 
     let auth_url = get_authorization_url(session, &mut client).await;
+    info!("Auth URL: {}", auth_url);
     drop(client);
     Ok(auth_url)
 }
@@ -77,7 +78,9 @@ pub async fn authentik_callback_cookie(
         })?;
     // This function will validate the state from the callback. Then it will exchange the code for a token and then get the user profile. After that, the function will upsert the user and the session and set the token in a short live cookie and save the cookie in the private cookie jar. Lastly, the function will create a response with the short live cookie and the redirect to the protected URL
     info!("Exchanging code for token...");
-    info!("{:?}",client.get_cookie_config());
+    info!(" client cookie{:?}",client.get_cookie_config());
+    info!("parms: {:?}", params);
+    info!("session: {:?}",session);
     let response = callback::<OAuth2UserProfile, users::Model, o_auth2_sessions::Model, SessionMySqlPool>(
         ctx,
         session,

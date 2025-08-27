@@ -6,7 +6,7 @@ use loco_rs::config::{Config, Initializers};
 use loco_rs::db::connect;
 use loco_rs::prelude::*;
 use serde::Deserialize;
-
+use tracing::info;
 
 #[derive(Debug, Deserialize, Clone)]
 struct AxumSessionCookieCfg {
@@ -45,6 +45,8 @@ impl Initializer for AxumSessionInitializer {
         let t= &ctx.config;
         let c = ctx.db.get_mysql_connection_pool();
         let config_env = read_axum_session_cfg(&ctx.config.initializers);
+        info!("initializing session");
+        info!("config: {:?}", config_env);
 
         // Create the session store configuration
         let session_config = axum_session::SessionConfig::default()
