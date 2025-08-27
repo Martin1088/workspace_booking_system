@@ -52,8 +52,8 @@ impl Initializer for AxumSessionInitializer {
             .with_key(axum_session::Key::generate())
             .with_database_key(axum_session::Key::generate())
             .with_cookie_path(config_env.cookie_path.unwrap_or_else(|| "/".into()))
-            .with_cookie_domain(config_env.cookie_domain.unwrap_or_else(|| "localhost".into()))
-            .with_secure(config_env.cookie_secure.unwrap_or(false))
+            .with_cookie_domain(config_env.cookie_domain.unwrap_or_else(|| "planner.verbis.dkfz.de".into()))
+            .with_secure(config_env.cookie_secure.unwrap_or(true))
             .with_cookie_same_site(SameSite::Lax);
         
         let st = SessionMySqlPool::from(c.clone());
