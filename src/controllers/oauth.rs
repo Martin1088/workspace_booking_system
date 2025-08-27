@@ -1,5 +1,6 @@
 use std::collections::HashSet;
 use std::error::Error as StdError;
+use std::fmt::Debug;
 use axum::Extension;
 use axum::extract::{Query, State};
 use axum::routing::get;
@@ -10,16 +11,41 @@ use loco_oauth2::controllers::oauth2::{get_authorization_url, AuthParams};
 use loco_oauth2::OAuth2ClientStore;
 use loco_rs::Error;
 use loco_oauth2::controllers::oauth2::callback;
+use loco_oauth2::grants::authorization_code::GrantTrait;
 use loco_rs::app::AppContext;
 use loco_rs::controller::{format, unauthorized, Routes};
 use loco_rs::prelude::{IntoResponse, Response};
 use crate::models::{o_auth2_sessions, users};
 use crate::models::oauth_user::OAuth2UserProfile;
 use crate::views::auth::LoginResponse;
-use oauth2::{AuthorizationCode, TokenResponse};
+use oauth2::{AuthorizationCode, CsrfToken, PkceCodeChallenge, PkceCodeVerifier, TokenResponse};
+use oauth2::url::Url;
 use serde::Deserialize;
+use tokio::sync::MutexGuard;
 use tracing::info;
 
+pub async fn get_authorization_url_with_pkce<T>(
+    mut session: Session<T>,
+    oauth2_client: &mut MutexGuard<'_, dyn GrantTrait>,
+) -> String
+where
+    T: axum_session::DatabasePool + Clone + Debug + Sync + Send + 'static,
+{
+    let (pkce_challenge, pkce_verifier) = PkceCodeChallenge::new_random_sha256();
+
+    session
+        .set("PKCE_VERIFIER", pkce_verifier.secret().to_owned());
+    let (auth_url, csrf) = oauth2_client.get_authorization_url();
+    session
+        .set("CSRF_TOKEN", csrf.secret().to_owned());
+    let mut url = Url::parse(&auth_url.to_string()).expect("invalid auth_url");
+    {
+        let mut qp = url.query_pairs_mut();
+        qp.append_pair("code_challenge", pkce_challenge.as_str());
+        qp.append_pair("code_challenge_method", "S256");
+    }
+    url.to_string()
+}
 pub async fn authentik_authorization_url(
     session: Session<SessionMySqlPool>,
     Extension(oauth2_store): Extension<OAuth2ClientStore>,
@@ -31,8 +57,8 @@ pub async fn authentik_authorization_url(
             tracing::error!("Error getting client: {:?}", e);
             Error::InternalServerError
         })?;
-
-    let auth_url = get_authorization_url(session, &mut client).await;
+    
+    let auth_url = get_authorization_url_with_pkce(session, &mut client).await;
     info!("Auth URL: {}", auth_url);
     drop(client);
     Ok(auth_url)
@@ -64,11 +90,11 @@ pub async fn authentik_callback_cookie(
     State(ctx): State<AppContext>,
     session: Session<SessionMySqlPool>,
     Query(params): Query<AuthParams>,
-    // Extract the private cookie jar from the request
     jar: OAuth2PrivateCookieJar,
     Extension(oauth2_store): Extension<OAuth2ClientStore>,
 ) -> Result<impl IntoResponse, Error> {
     info!("cookie: {:?}", session);
+    
     let mut client = oauth2_store
         .get_authorization_code_client("authentik")
         .await
@@ -76,6 +102,7 @@ pub async fn authentik_callback_cookie(
             tracing::error!("Error getting client: {:?}", e);
             Error::InternalServerError
         })?;
+    
     // This function will validate the state from the callback. Then it will exchange the code for a token and then get the user profile. After that, the function will upsert the user and the session and set the token in a short live cookie and save the cookie in the private cookie jar. Lastly, the function will create a response with the short live cookie and the redirect to the protected URL
     info!("Exchanging code for token...");
     info!(" client cookie{:?}",client.get_cookie_config());
