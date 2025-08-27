@@ -43,7 +43,7 @@ initializers:
         client_credentials:
           client_id: {{get_env(name="OAUTH_CLIENT_ID", default="workspace-booking")}} # Replace with your OAuth2 client ID.
           client_secret: {{get_env(name="OAUTH_CLIENT_SECRET", default="2shYGe1OXfO2wBDJA5OD6dB29U8UVdWhHzp4N4xFiqilQ9y7Z4HzUEHXaTBWbOTV9b3HeiNk1IGHghi1f1tkr8oGmR2HexUUnDPIWtZQiMHrAkPehtRC3B84UdMaUizT")}} # Replace with your OAuth2 client secret.
-          auth_type: request_body
+          auth_type: basic
         url_config:
           auth_url: {{get_env(name="AUTH_URL", default="http://localhost:9000/application/o/authorize/")}} # authorization endpoint from the provider
           token_url: {{get_env(name="TOKEN_URL", default="http://localhost:9000/application/o/token/")}} # token endpoint from the provider for exchanging the authorization code for an access token
