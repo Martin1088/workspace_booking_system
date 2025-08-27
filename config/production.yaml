@@ -60,6 +60,12 @@ initializers:
           cookie_domain: "planner.verbis.dkfz.de"
           cookie_same_site: Lax
         timeout_seconds: 600 # Optional, default 600 seconds
+  axum_session:
+    cookie_config:
+      cookie_secure: true
+      cookie_path: "/"
+      cookie_domain: "planner.verbis.dkfz.de"
+      cookie_same_site: Lax
 
 # Database Configuration
 database:
