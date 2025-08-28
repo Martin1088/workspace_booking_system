@@ -18,7 +18,8 @@ use loco_rs::prelude::{IntoResponse, Response};
 use crate::models::{o_auth2_sessions, users};
 use crate::models::oauth_user::OAuth2UserProfile;
 use crate::views::auth::LoginResponse;
-use oauth2::{AuthorizationCode, CsrfToken, PkceCodeChallenge, PkceCodeVerifier, TokenResponse};
+use oauth2::{AuthUrl, AuthorizationCode, ClientId, ClientSecret, CsrfToken, PkceCodeChallenge, PkceCodeVerifier, RedirectUrl, TokenResponse, TokenUrl};
+use oauth2::basic::BasicClient;
 use oauth2::url::Url;
 use serde::Deserialize;
 use tokio::sync::MutexGuard;
@@ -46,6 +47,35 @@ where
     }
     url.to_string()
 }
+/*
+pub async fn authentik_authorization_url(
+    mut session: Session<SessionMySqlPool>,
+) -> Result<String, loco_rs::Error> {
+    
+    let client = BasicClient::new(
+        ClientId::new(std::env::var("OAUTH_CLIENT_ID")?),
+        Some(ClientSecret::new(std::env::var("OAUTH_CLIENT_SECRET")?)),
+        AuthUrl::new(std::env::var("AUTH_URL")?)?,
+        Some(TokenUrl::new(std::env::var("TOKEN_URL")?)?)
+    ).set_redirect_uri(RedirectUrl::new(std::env::var("REDIRECT_URL")?)?);
+
+    // PKCE
+    let (challenge, verifier) = PkceCodeChallenge::new_random_sha256();
+    session.set("PKCE_VERIFIER", verifier.secret().to_string());
+
+    // CSRF
+    let (auth_url, state) = client
+        .authorize_url(CsrfToken::new_random)
+        .add_scope(oauth2::Scope::new("openid".into()))
+        .add_scope(oauth2::Scope::new("email".into()))
+        .add_scope(oauth2::Scope::new("profile".into()))
+        .set_pkce_challenge(challenge)
+        .url();
+
+    session.set("CSRF_TOKEN", state.secret().to_string());
+    Ok(auth_url.to_string())
+}
+*/
 pub async fn authentik_authorization_url(
     session: Session<SessionMySqlPool>,
     Extension(oauth2_store): Extension<OAuth2ClientStore>,
@@ -58,7 +88,7 @@ pub async fn authentik_authorization_url(
             Error::InternalServerError
         })?;
     
-    let auth_url = get_authorization_url(session, &mut client).await;
+    let auth_url = get_authorization_url_with_pkce(session, &mut client).await;
     info!("Auth URL: {}", auth_url);
     drop(client);
     Ok(auth_url)

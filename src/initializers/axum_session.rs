@@ -47,7 +47,7 @@ impl Initializer for AxumSessionInitializer {
         let config_env = read_axum_session_cfg(&ctx.config.initializers);
         info!("initializing session");
         info!("config: {:?}", config_env);
-
+        
         // Create the session store configuration
         let session_config = axum_session::SessionConfig::default()
             .with_table_name("sessions_table")
@@ -57,7 +57,6 @@ impl Initializer for AxumSessionInitializer {
             .with_cookie_domain(config_env.cookie_domain.unwrap_or_else(|| "planner.verbis.dkfz.de".into()))
             .with_secure(config_env.cookie_secure.unwrap_or(true))
             .with_cookie_same_site(SameSite::Lax);
-        
         let st = SessionMySqlPool::from(c.clone());
         // Create the session store
         let session_store =
