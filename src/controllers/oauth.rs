@@ -11,77 +11,22 @@ use loco_oauth2::controllers::oauth2::{get_authorization_url, AuthParams};
 use loco_oauth2::OAuth2ClientStore;
 use loco_rs::Error;
 use loco_oauth2::controllers::oauth2::callback;
-use loco_oauth2::grants::authorization_code::GrantTrait;
 use loco_rs::app::AppContext;
 use loco_rs::controller::{format, unauthorized, Routes};
 use loco_rs::prelude::{IntoResponse, Response};
 use crate::models::{o_auth2_sessions, users};
 use crate::models::oauth_user::OAuth2UserProfile;
 use crate::views::auth::LoginResponse;
-use oauth2::{AuthUrl, AuthorizationCode, ClientId, ClientSecret, CsrfToken, PkceCodeChallenge, PkceCodeVerifier, RedirectUrl, TokenResponse, TokenUrl};
-use oauth2::basic::BasicClient;
-use oauth2::url::Url;
+use oauth2::{AuthorizationCode, ClientId, ClientSecret, CsrfToken, PkceCodeChallenge, PkceCodeVerifier, RedirectUrl, TokenResponse, TokenUrl};
 use serde::Deserialize;
-use tokio::sync::MutexGuard;
 use tracing::info;
 
-pub async fn get_authorization_url_with_pkce<T>(
-    mut session: Session<T>,
-    oauth2_client: &mut MutexGuard<'_, dyn GrantTrait>,
-) -> String
-where
-    T: axum_session::DatabasePool + Clone + Debug + Sync + Send + 'static,
-{
-    let (pkce_challenge, pkce_verifier) = PkceCodeChallenge::new_random_sha256();
-
-    session
-        .set("PKCE_VERIFIER", pkce_verifier.secret().to_owned());
-    let (auth_url, csrf) = oauth2_client.get_authorization_url();
-    session
-        .set("CSRF_TOKEN", csrf.secret().to_owned());
-    let mut url = Url::parse(&auth_url.to_string()).expect("invalid auth_url");
-    {
-        let mut qp = url.query_pairs_mut();
-        qp.append_pair("code_challenge", pkce_challenge.as_str());
-        qp.append_pair("code_challenge_method", "S256");
-    }
-    url.to_string()
-}
-/*
-pub async fn authentik_authorization_url(
-    mut session: Session<SessionMySqlPool>,
-) -> Result<String, loco_rs::Error> {
-    
-    let client = BasicClient::new(
-        ClientId::new(std::env::var("OAUTH_CLIENT_ID")?),
-        Some(ClientSecret::new(std::env::var("OAUTH_CLIENT_SECRET")?)),
-        AuthUrl::new(std::env::var("AUTH_URL")?)?,
-        Some(TokenUrl::new(std::env::var("TOKEN_URL")?)?)
-    ).set_redirect_uri(RedirectUrl::new(std::env::var("REDIRECT_URL")?)?);
-
-    // PKCE
-    let (challenge, verifier) = PkceCodeChallenge::new_random_sha256();
-    session.set("PKCE_VERIFIER", verifier.secret().to_string());
-
-    // CSRF
-    let (auth_url, state) = client
-        .authorize_url(CsrfToken::new_random)
-        .add_scope(oauth2::Scope::new("openid".into()))
-        .add_scope(oauth2::Scope::new("email".into()))
-        .add_scope(oauth2::Scope::new("profile".into()))
-        .set_pkce_challenge(challenge)
-        .url();
-
-    session.set("CSRF_TOKEN", state.secret().to_string());
-    Ok(auth_url.to_string())
-}
-*/
 pub async fn authentik_authorization_url(
     session: Session<SessionMySqlPool>,
     Extension(oauth2_store): Extension<OAuth2ClientStore>,
 ) -> Result<String, Error> {
     let mut client = oauth2_store
-        .get_authorization_code_client("authentik") // changed here
+        .get_authorization_code_client( "authentik") // changed here
         .await
         .map_err(|e| {
             tracing::error!("Error getting client: {:?}", e);
@@ -94,13 +39,6 @@ pub async fn authentik_authorization_url(
     Ok(auth_url)
 }
 
-
-
-#[derive(Debug, Deserialize)]
-pub struct AuthP {
-    pub code: String,
-    pub state: Option<String>,
-}
 /// The callback URL for the `OAuth2` flow
 /// This will exchange the code for a token and then get the user profile
 /// then upsert the user and the session and set the token in a short live
@@ -124,7 +62,6 @@ pub async fn authentik_callback_cookie(
     Extension(oauth2_store): Extension<OAuth2ClientStore>,
 ) -> Result<impl IntoResponse, Error> {
     info!("cookie: {:?}", session);
-    
     let mut client = oauth2_store
         .get_authorization_code_client("authentik")
         .await
