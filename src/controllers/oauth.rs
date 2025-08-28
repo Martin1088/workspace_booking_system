@@ -88,7 +88,7 @@ pub async fn authentik_authorization_url(
             Error::InternalServerError
         })?;
     
-    let auth_url = get_authorization_url_with_pkce(session, &mut client).await;
+    let auth_url = get_authorization_url(session, &mut client).await;
     info!("Auth URL: {}", auth_url);
     drop(client);
     Ok(auth_url)
@@ -156,6 +156,8 @@ pub async fn authentik_callback_cookie(
     drop(client);
     Ok(response)
 }
+
+
 
 async fn protected(
     State(ctx): State<AppContext>,
