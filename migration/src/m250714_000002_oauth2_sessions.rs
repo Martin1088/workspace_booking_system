@@ -12,7 +12,7 @@ impl MigrationTrait for Migration {
             "o_auth2_sessions",
             &[
                 ("id", ColType::PkAuto),
-                ("session_id", ColType::String),
+                ("session_id", ColType::StringLen(128)),
                 ("expires_at", ColType::TimestampWithTimeZone),
                 ("user_id", ColType::Integer),
             ],
