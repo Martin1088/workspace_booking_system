@@ -24,11 +24,12 @@ export class WeekdayComponent {
   enddate: string = '2040-01-01';
   weekOrDay: boolean = true;
   select_areas: string = '';
+  usernames: string[] = [];
 
   constructor(private fetchService: FetchService) { }
 
   ngOnInit(): void {
-
+    this.fetchService.getUsers()
     this.fetchService.info$.subscribe(info => this.info = info || '');
     this.fetchService.loading$.subscribe(loading => this.loading = loading);
     this.fetchService.responseMrbs$.subscribe(data => this.responseMrbs = data);

@@ -158,7 +158,6 @@ export class FetchService {
   async getUsers(): Promise<void> {
     try {
       const res = await firstValueFrom(this.http.get<Users>(this.apiReadUrl + 'users'));
-      console.log(res.result);
       this.usernames.next(res.result);
     } catch (e) {
       this.info.next(e as string);
