@@ -56,7 +56,8 @@ impl Initializer for AxumSessionInitializer {
             .with_cookie_path(config_env.cookie_path.unwrap_or_else(|| "/".into()))
             .with_cookie_domain(config_env.cookie_domain.unwrap_or_else(|| "planner.verbis.dkfz.de".into()))
             .with_secure(config_env.cookie_secure.unwrap_or(true))
-            .with_cookie_same_site(SameSite::Lax);
+            .with_cookie_same_site(SameSite::Lax)
+            .with_ip_and_user_agent(false);
         let st = SessionMySqlPool::from(c.clone());
         // Create the session store
         let session_store =
