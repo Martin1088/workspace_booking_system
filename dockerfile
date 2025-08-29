@@ -20,6 +20,17 @@ RUN cd frontend && npm install && npm run build
 RUN cargo build --release
 
 FROM debian:bookworm-slim
+# Zertifikat ins Image legen
+COPY ./sslcrt/my_ca.crt /usr/local/share/ca-certificates/my_ca.crt
+
+# CA-Store aktualisieren
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY ./sslcrt/ca.pem /usr/local/share/ca-certificates/custom-ca.crt
+
+COPY docker-entrypoint.sh /usr/app/docker-entrypoint.sh
+RUN chmod +x /usr/app/docker-entrypoint.sh
 
 WORKDIR /usr/app
 
@@ -28,5 +39,5 @@ COPY --from=builder /usr/src/frontend/dist/frontend/browser/index.html frontend/
 COPY --from=builder /usr/src/config config
 COPY --from=builder /usr/src/target/release/workspace_booking_system-cli workspace_booking_system-cli
 
-ENTRYPOINT ["/usr/app/workspace_booking_system-cli", "start", "--environment", "production"]
-#ENTRYPOINT ["/usr/app/workspace_booking_system-cli", "start", "--environment", "development"]
+#ENTRYPOINT ["/usr/app/workspace_booking_system-cli", "start", "--environment", "production"]
+ENTRYPOINT ["/usr/app/docker-entrypoint.sh"]
