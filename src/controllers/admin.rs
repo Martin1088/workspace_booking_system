@@ -1,5 +1,4 @@
 use loco_rs::prelude::*;
-use sea_orm::sqlx::encode::IsNull::No;
 use serde::{Deserialize, Serialize};
 use crate::models::create_admin::{operate_area, operate_room, CreateArea, CreateRoom, DeleteArea, DeleteRoom, UpdateArea, UpdateRoom};
 

@@ -1,10 +1,8 @@
-use std::collections::HashSet;
 use std::error::Error as StdError;
-use std::fmt::Debug;
 use axum::Extension;
 use axum::extract::{Query, State};
 use axum::routing::get;
-use axum_session::{DatabasePool, Session, SessionLayer, SessionStore};
+use axum_session::Session;
 use axum_session_sqlx::SessionMySqlPool;
 use loco_oauth2::controllers::middleware::{OAuth2CookieUser, OAuth2PrivateCookieJar};
 use loco_oauth2::controllers::oauth2::{get_authorization_url, AuthParams};
@@ -17,8 +15,7 @@ use loco_rs::prelude::{IntoResponse, Response};
 use crate::models::{o_auth2_sessions, users};
 use crate::models::oauth_user::OAuth2UserProfile;
 use crate::views::auth::LoginResponse;
-use oauth2::{AuthorizationCode, ClientId, ClientSecret, CsrfToken, PkceCodeChallenge, PkceCodeVerifier, RedirectUrl, TokenResponse, TokenUrl};
-use serde::Deserialize;
+use oauth2::{ClientSecret, CsrfToken, PkceCodeChallenge, PkceCodeVerifier, RedirectUrl, TokenResponse, TokenUrl};
 use tracing::info;
 
 pub async fn authentik_authorization_url(
