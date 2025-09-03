@@ -68,19 +68,7 @@ Now it is a modern and fast webservice.
 
 ## Prerequisites
 
-- Build your docker image
-- Run with Docker Compose
-
-```
-docker-compose up --build
-```
-
-This will start:
-• Rust backend API
-• Angular frontend
-• MySQL database
-
-Update .env files before running. Example with Authentik please customize.
+Update .env files before running.
 ```
 OAUTH_CLIENT_ID="workspace-booking"
 OAUTH_CLIENT_SECRET=""
@@ -89,8 +77,30 @@ TOKEN_URL="http://localhost:9000/application/o/token/"
 REDIRECT_URL="http://localhost:5150/api/oauth2/authentik/callback/cookie"
 PROFILE_URL="http://localhost:9000/application/o/userinfo/"
 PROTECTED_URL="http://localhost:5150/"
+ADMIN_GROUPS="authentik Admins,workspace-booking-admins"
+```
+Example with Authentik please customize.
+```
+OAUTH_CLIENT_ID=""
+OAUTH_CLIENT_SECRET=""
+AUTH_URL="https://<your-domain-authentik>/application/o/authorize/"
+TOKEN_URL="https://<your-domain-authentik>/application/o/token/"
+REDIRECT_URL="https://<your-domain-web>/api/oauth2/authentik/callback/cookie"
+PROFILE_URL="https://<your-domain-authentik>/application/o/userinfo/"
+PROTECTED_URL="https://<your-domain-web>/"
+ADMIN_GROUPS="authentik Admins,workspace-booking-admins"
 
 ```
+Customize your docker-compose.yaml
+```
+docker compose up
+```
+
+This will start:
+- Rust backend API
+- Angular frontend
+- MySQL database
+
 ---
 
 
@@ -133,7 +143,7 @@ npm build
 
 # API Endpoints
 
-## 🔐 Authentication
+## Authentication
 
 | Method | Endpoint                               | Description                    |
 |--------|----------------------------------------|--------------------------------|
@@ -148,7 +158,7 @@ npm build
 
 ---
 
-## 🔐 OAuth Integration
+## OAuth Integration
 
 | Method | Endpoint                                              | Description                   |
 |--------|-------------------------------------------------------|-------------------------------|
@@ -158,7 +168,7 @@ npm build
 
 ---
 
-## 🏢 Admin: Room & Area Management
+## Admin: Room & Area Management
 
 | Method | Endpoint                               | Description                    |
 |--------|----------------------------------------|--------------------------------|
@@ -170,7 +180,7 @@ npm build
 
 ---
 
-## 📆 Booking & Overview
+## Booking & Overview
 
 | Method | Endpoint                               | Description                            |
 |--------|----------------------------------------|----------------------------------------|
@@ -184,7 +194,7 @@ npm build
 
 ---
 
-## 🧪 Utility
+##  Utility
 
 | Method | Endpoint     | Description            |
 |--------|--------------|------------------------|
