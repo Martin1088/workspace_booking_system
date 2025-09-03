@@ -1,6 +1,7 @@
 # Working Space Booking System
 
-![Build](https://img.shields.io/github/actions/workflow/status/Martin1088/workingspace_booking_system/ci.yml?branch=main)
+![Build](https://img.shields.io/github/actions/workflow/status/Martin1088/workingspace_booking_system/dockerhub.yml?branch=main)
+![Build](https://img.shields.io/github/actions/workflow/status/Martin1088/workingspace_booking_system/ghcr-docker.yml?branch=main)
 ![Rust](https://img.shields.io/badge/Rust-1.80+-orange)
 ![Angular](https://img.shields.io/badge/Angular-17+-red)
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-5-blue)
@@ -8,6 +9,12 @@
 
 A full-stack **workspace booking management system** built with **Rust (Loco + SeaORM)** on the backend, **Angular** for
 the frontend, **Bootstrap** for UI styling, **MySQL** for database storage, and **OAuth** for secure login.
+
+Based on [MRBS](https://github.com/meeting-room-booking-system/mrbs-code) a classic PHP application for booking meeting rooms, rewritten and simplyfied for managing workspaces.
+Before flexible working for all departmental employees across all sites was hindered by limitations in the existing room booking system. 
+Additionally, the booking procedure itself was time-consuming and did not allow for spontaneous reservations, reducing overall efficiency and flexibility.
+
+Now it is a modern and fast webservice.
 
 ---
 ![preview](docu/assets/Preview.png)
