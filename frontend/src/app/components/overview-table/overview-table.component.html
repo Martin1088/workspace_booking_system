@@ -11,8 +11,9 @@
         <td>
           {{ room.room_name }}<br />
           {{ room.description }}
-          <span *ngIf="room.entry_id == null">𐄂</span>
-          <span *ngIf="room.entry_id != null">✔</span>
+          @if (room.capacity <= room.participants.length) {
+            <span>⚠️</span>
+          }
         </td>
         <td>
           <div *ngFor="let p of room.participants" class="">

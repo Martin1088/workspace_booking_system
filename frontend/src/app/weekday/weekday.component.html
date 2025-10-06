@@ -10,7 +10,7 @@
   />
 </div>
 
-<!-- sellecting the Area Mannheim or Heidelberg -->
+<!-- selecting the Area -->
 <div class="form-group mb-3">
   <label for="allarea" class="form-label">Offices</label>
   <select class="form-select" [(ngModel)]="select_areas">
@@ -21,35 +21,33 @@
 </div>
 
 <!-- Weekly Overview -->
-<div class="container">
-  <div class="d-flex flex-row">
-    <div *ngFor="let week of weekData">
-      <div *ngFor="let res of week.areas">
-        <div
-          *ngIf="select_areas === res.area_name"
-          class="card mx-auto border-info mb-3"
-        >
-          <div class="card-body">
-            <h3 class="card-title">
-              {{ week.weekday }} {{ week.date | date: "yyyy-MM-dd" }}
-            </h3>
+<div class="d-flex flex-row justify-content-center">
+  <div *ngFor="let week of weekData">
+    <div *ngFor="let res of week.areas">
+      <div
+        *ngIf="select_areas === res.area_name"
+        class="card mx-auto border-info mb-3"
+      >
+        <div class="card-body">
+          <h3 class="card-title">
+            {{ week.weekday }} {{ week.date | date: "yyyy-MM-dd" }}
+          </h3>
 
-            <div class="bg-info p-3 rounded border border-dark">
-              <!-- Weekday and joining Method -->
-              <app-header-join-select
-                [res]="res.rooms"
-                [users]="usernames"
-                [cardDate]="week.date"
-                [weekOrDay]="weekOrDay"
-              ></app-header-join-select>
+          <div class="bg-info p-3 rounded border border-dark">
+            <!-- Weekday and joining Method -->
+            <app-header-join-select
+              [res]="res.rooms"
+              [users]="usernames"
+              [cardDate]="week.date"
+              [weekOrDay]="weekOrDay"
+            ></app-header-join-select>
 
-              <app-overview-table
-                [res]="res.rooms"
-                [date]="date.toISOString()"
-                [weekOrDay]="weekOrDay"
-                [loading]="loading"
-              ></app-overview-table>
-            </div>
+            <app-overview-table
+              [res]="res.rooms"
+              [date]="date.toISOString()"
+              [weekOrDay]="weekOrDay"
+              [loading]="loading"
+            ></app-overview-table>
           </div>
         </div>
       </div>

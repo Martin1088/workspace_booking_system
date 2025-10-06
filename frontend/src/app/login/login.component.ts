@@ -15,6 +15,7 @@ export class LoginComponent {
   email: string = '';
   password: string = '';
   isDisabled = true;
+  defaultLogin = false;
 
   constructor(private authService: AuthService) {
   }

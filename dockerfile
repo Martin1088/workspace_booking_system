@@ -33,5 +33,8 @@ COPY --from=builder /usr/src/frontend/dist/frontend/browser/index.html frontend/
 COPY --from=builder /usr/src/config config
 COPY --from=builder /usr/src/target/release/workspace_booking_system-cli workspace_booking_system-cli
 
+# jpg copy for office overview
+RUN mkdir -p /frontend/dist/frontend/browser/assets
+
 #ENTRYPOINT ["/usr/app/workspace_booking_system-cli", "start", "--environment", "production"]
 ENTRYPOINT ["/usr/app/docker-entrypoint.sh"]

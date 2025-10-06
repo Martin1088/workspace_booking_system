@@ -43,5 +43,5 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            martinjurk/workspace-booking-system:0.1
+            martinjurk/workspace-booking-system:1.1
             martinjurk/workspace-booking-system:${{ github.sha }}

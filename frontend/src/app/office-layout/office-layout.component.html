@@ -1,8 +1,11 @@
 <div>
   <h1>Office</h1>
-  <h2>Heidelberg</h2>
-  <img [src]="heidelberg" alt="Heidelberg overview" />
-
-  <h2>Mannheim</h2>
-  <img [src]="mannheim" alt="Mannheim overview" />
+  @for (res of responseMrbs; track res.id) {
+    <h2>{{ res.area_name.toLowerCase() }}</h2>
+    <img
+      [src]="'/assets/' + res.area_name.toLowerCase() + '.jpeg'"
+      [alt]="res.area_name.toLowerCase() + ' overview'"
+      class="img-fluid rounded mb-3"
+    />
+  }
 </div>

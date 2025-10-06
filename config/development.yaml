@@ -92,17 +92,17 @@ initializers:
           protected_url: {{get_env(name="PROTECTED_URL", default="http://localhost:5150/")}} # Optional for jwt - For redirecting to protect url in cookie to prevent XSS attack
           cookie_secure: false
           cookie_path: "/"
-          cookie_domain: localhost
+          cookie_domain: {{get_env(name="HOST", default="localhost")}}
           cookie_http_only: true
-          cookie_same_site: None
+          cookie_same_site: Lax
         timeout_seconds: 600 # Optional, default 600 seconds
   axum_session:
     cookie_config:
       cookie_secure: false
       cookie_path: "/"
-      cookie_domain: localhost
+      cookie_domain: {{get_env(name="HOST", default="localhost")}}
       cookie_http_only: true
-      cookie_same_site: None
+      cookie_same_site: Lax
 
 # Database Configuration
 database:

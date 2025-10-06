@@ -21,7 +21,9 @@ struct AxumSessionCookieCfg {
 fn read_axum_session_cfg(app_cfg: &Option<Initializers>) -> AxumSessionCookieCfg {
     app_cfg.clone()
         .expect("No config for axum_session")
-        .get("axum_session.cookie_config")
+        .get("axum_session")
+        .expect("Axum session config must exist")
+        .get("cookie_config")
         .and_then(|v| serde_json::from_value(v.clone()).ok())
         .unwrap_or(AxumSessionCookieCfg {
             protected_url: None,
@@ -30,6 +32,14 @@ fn read_axum_session_cfg(app_cfg: &Option<Initializers>) -> AxumSessionCookieCfg
             cookie_domain: None,
             cookie_same_site: None,
         })
+}
+
+fn same_site_from(cfg: &Option<String>) -> SameSite {
+    match cfg.as_deref().unwrap_or("Lax").to_lowercase().as_str() {
+        "lax" => SameSite::Lax,
+        "strict" => SameSite::Strict,
+        _ => SameSite::None,
+    }
 }
 
 pub struct AxumSessionInitializer;
@@ -51,9 +61,9 @@ impl Initializer for AxumSessionInitializer {
             .with_key(axum_session::Key::generate())
             .with_database_key(axum_session::Key::generate())
             .with_cookie_path(config_env.cookie_path.unwrap_or_else(|| "/".into()))
-            .with_cookie_domain(config_env.cookie_domain.unwrap_or_else(|| "planner.verbis.dkfz.de".into()))
+            //.with_cookie_domain(config_env.cookie_domain.unwrap_or_else(|| "planner.verbis.dkfz.de".into()))
             .with_secure(config_env.cookie_secure.unwrap_or(true))
-            .with_cookie_same_site(SameSite::Lax)
+            .with_cookie_same_site(same_site_from(&config_env.cookie_same_site))
             .with_ip_and_user_agent(false);
         let st = SessionMySqlPool::from(c.clone());
         // Create the session store

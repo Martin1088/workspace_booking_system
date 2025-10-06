@@ -40,9 +40,11 @@ export class WeekdayComponent {
   }
   onChangeDate(event: Event) {
     const input = event.target as HTMLInputElement;
+    let keep = this.select_areas;
     this.date = input.valueAsDate ?? new Date();
     console.log("Selected Date:", this.date);
     this.getOverviewweek();
+    this.select_areas = keep;
   }
 
   getOverviewweek() {

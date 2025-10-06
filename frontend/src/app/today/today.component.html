@@ -55,8 +55,8 @@
                       class="form-check-input"
                       [id]="day.name + res.area_name"
                       [value]="day.num"
-                      [checked]="bookingdays.includes(day.num)"
-                      (change)="updateBookingDays($event, day.num)"
+                      [checked]="hasDay(res.area_name, day.num)"
+                      (change)="updateBookingDays(res.area_name, day.num, $event)"
                     />
                     <label class="form-check-label" [for]="day.name + res.area_name">
                       {{ day.name }}
@@ -78,8 +78,8 @@
 
                 <button
                   class="btn btn-success"
-                  (click)="setJoins()"
-                  [disabled]="loading"
+                  (click)="setJoins(res.area_name)"
+                  [disabled]="loading || !(bookingdays.get(res.area_name)?.length) "
                 >
                   @if (loading) {
                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>

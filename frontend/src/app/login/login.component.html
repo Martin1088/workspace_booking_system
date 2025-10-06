@@ -3,6 +3,7 @@
     <div class="card-body">
       <h3 class="card-title">Login</h3>
       <div class="bg-info p-3 rounded border border-dark">
+        @if (defaultLogin) {
         <form (ngSubmit)="onLogin()" #loginForm="ngForm" novalidate>
           <div class="form-group mb-2">
             <label for="email">Email</label>
@@ -20,9 +21,10 @@
                [attr.aria-disabled]="isDisabled">
               Register
             </a>
-            <a class="btn btn-outline-light" (click)="onOAuthLogin()">Login Oauth</a>
           </div>
         </form>
+        }
+        <a class="btn btn-outline-light" (click)="onOAuthLogin()">Login to your workspace</a>
       </div>
     </div>
   </div>
