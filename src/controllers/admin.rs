@@ -1,6 +1,8 @@
 use loco_rs::prelude::*;
 use serde::{Deserialize, Serialize};
 use crate::models::create_admin::{operate_area, operate_room, CreateArea, CreateRoom, DeleteArea, DeleteRoom, UpdateArea, UpdateRoom};
+use crate::models::mrbs_room::MrbsRoomActiveModel;
+use crate::response_type::success::ResponseType;
 
 #[derive(Debug, Deserialize, Serialize, Default)]
 pub struct CreateRoomQuery {
@@ -21,8 +23,11 @@ pub async fn create_room(
     Json(params): Json<CreateRoomQuery>,
 ) -> Result<Response, Response> {
     let db: &DatabaseConnection = &ctx.db;
-    let res = operate_room(db, params, None,  &CreateRoom).await?;
-    Ok(res.into_response())
+    let res = MrbsRoomActiveModel::create_room(
+        db,
+        &params.area_id,
+        &params).await?;
+    Ok(ResponseType::SuccessfulJoined.into_response())
 }
 
 pub async fn delete_room(

@@ -20,13 +20,15 @@ pub struct OAuth2UserProfile {
     pub iat: Option<u64>,
     pub auth_time: Option<u64>,
     pub acr: Option<String>,
-    pub email: String,
-    pub email_verified: bool,
+    pub email: Option<String>,
+    pub email_verified: Option<bool>,
     pub name: String,
     pub given_name: Option<String>,
     pub preferred_username: Option<String>,
     pub nickname: Option<String>,
     pub groups: Option<Vec<String>>,
+    pub unique_name: Option<String>,
+    pub upn: Option<String>
 }
 #[async_trait]
 impl OAuth2UserTrait<OAuth2UserProfile> for Model {
@@ -74,8 +76,13 @@ impl OAuth2UserTrait<OAuth2UserProfile> for Model {
         profile: &OAuth2UserProfile,
     ) -> ModelResult<Self> {
         let txn = db.begin().await?;
+        let email: String = profile.email.clone()
+            .or(profile.preferred_username.clone())
+            .or(profile.unique_name.clone())
+            .or(profile.upn.clone())
+            .unwrap_or_else(||"unknown@example.com".to_string());
         let user = match users::Entity::find()
-            .filter(users::Column::Email.eq(&profile.email))
+            .filter(users::Column::Email.eq(&email))
             .one(&txn)
             .await?
         {
@@ -87,7 +94,7 @@ impl OAuth2UserTrait<OAuth2UserProfile> for Model {
                 // Admin check
                 // Create the user into the database
                 users::ActiveModel {
-                    email: ActiveValue::set(profile.email.to_string()),
+                    email: ActiveValue::set(email),
                     name: ActiveValue::set(profile.name.to_string()),
                     email_verified_at: ActiveValue::set(Some(Local::now().into())),
                     password: ActiveValue::set(password_hash),

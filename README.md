@@ -91,6 +91,17 @@ PROTECTED_URL="https://<your-domain-web>/"
 ADMIN_GROUPS="authentik Admins,workspace-booking-admins"
 
 ```
+Example with EntraID please customize.
+```
+OAUTH_CLIENT_ID=""
+OAUTH_CLIENT_SECRET=""
+AUTH_URL="https://login.microsoftonline.com/<Directory (tenant) ID>/oauth2/v2.0/authorize"
+TOKEN_URL="https://login.microsoftonline.com/<Directory (tenant) ID>/oauth2/v2.0/token"
+REDIRECT_URL="https://<your-domain-web>/api/oauth2/authentik/callback/cookie"
+PROFILE_URL="https://graph.microsoft.com/oidc/userinfo"
+PROTECTED_URL="https://<your-domain-web>/"
+ADMIN_GROUPS="workspace-booking-admins"
+```
 Customize your docker-compose.yaml
 ```
 docker compose up
@@ -127,6 +138,26 @@ mysql -u root mrbs < backup.sql
 
 5. Backend Setup
 
+Set the envirnment variables  .cargo/config.toml. Like this example
+
+```
+[env]
+DATABASE_URL="mysql://<user>:<password>@localhost:<port>/mrbs"
+OAUTH_CLIENT_ID=""
+OAUTH_CLIENT_SECRET=""
+AUTH_URL="http://localhost:9000/application/o/authorize/"
+TOKEN_URL="http://localhost:9000/application/o/token/"
+REDIRECT_URL="http://localhost:5150/api/oauth2/authentik/callback/cookie"
+PROFILE_URL="http://localhost:9000/application/o/userinfo/"
+PROTECTED_URL="http://localhost:5150/"
+AUTH_TYPE="request_body"
+[alias]
+loco = "run --"
+loco-tool = "run --"
+
+playground = "run --example playground"
+```
+then:
 ```
 cargo loco start
 ```

@@ -16,7 +16,7 @@ use crate::models::{o_auth2_sessions, users};
 use crate::models::oauth_user::OAuth2UserProfile;
 use crate::views::auth::LoginResponse;
 use oauth2::{ClientSecret, CsrfToken, PkceCodeChallenge, PkceCodeVerifier, RedirectUrl, TokenResponse, TokenUrl};
-use tracing::info;
+use tracing::{debug, info};
 
 pub async fn authentik_authorization_url(
     session: Session<SessionMySqlPool>,
@@ -102,7 +102,6 @@ async fn protected(
     let token = user
         .generate_jwt(&jwt_secret.secret, &jwt_secret.expiration)
         .or_else(|_| unauthorized("unauthorized!"))?;
-    
     // Return the user and the token in JSON format
     format::json(LoginResponse::new(user, &token))
 }
