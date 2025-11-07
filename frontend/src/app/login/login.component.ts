@@ -14,8 +14,8 @@ import { AuthService } from '../services/auth.service';
 export class LoginComponent {
   email: string = '';
   password: string = '';
-  isDisabled = true;
-  defaultLogin = false;
+  isDisabled = false;
+  defaultLogin = true;
 
   constructor(private authService: AuthService) {
   }

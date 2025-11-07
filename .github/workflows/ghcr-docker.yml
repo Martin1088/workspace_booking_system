@@ -3,7 +3,7 @@ name: Docker (GHCR)
 on:
   pull_request:
   push:
-    branches: [ main ]
+    branches: [ main, demo ]
     tags: [ 'v*' ]
 
 env:
@@ -28,6 +28,7 @@ jobs:
           images: ${{ env.IMAGE_NAME }}
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value=demo,enable=${{ github.ref == 'refs/heads/demo' }}
             type=sha,format=short
             type=ref,event=tag
 

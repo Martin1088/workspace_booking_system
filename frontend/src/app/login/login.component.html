@@ -7,14 +7,14 @@
         <form (ngSubmit)="onLogin()" #loginForm="ngForm" novalidate>
           <div class="form-group mb-2">
             <label for="email">Email</label>
-            <input id="email" class="form-control" type="email" name="email" [(ngModel)]="email" required disabled/>
+            <input id="email" class="form-control" type="email" name="email" [(ngModel)]="email" required/>
           </div>
           <div class="form-group mb-3">
             <label for="password">Password</label>
-            <input id="password" class="form-control" type="password" name="password" [(ngModel)]="password" required disabled/>
+            <input id="password" class="form-control" type="password" name="password" [(ngModel)]="password" required/>
           </div>
           <div class="d-flex gap-2">
-            <button type="submit" class="btn btn-primary" disabled>Login</button>
+            <button type="submit" class="btn btn-primary">Login default</button>
             <a [routerLink]="['/register']"
                class="btn btn-outline-light"
                [class.disabled]="isDisabled"
@@ -24,7 +24,7 @@
           </div>
         </form>
         }
-        <a class="btn btn-outline-light" (click)="onOAuthLogin()">Login to your workspace</a>
+        <a class="btn btn-outline-light" (click)="onOAuthLogin()">Login to your workspace with OAuth</a>
       </div>
     </div>
   </div>
