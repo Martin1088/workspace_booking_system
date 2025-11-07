@@ -109,7 +109,7 @@ impl OAuth2UserTrait<OAuth2UserProfile> for Model {
                                 );
                                 Some(if admin_flag { 1 } else { 0 })
                             },
-                            None => None,
+                            None => Some(0),
                         }
                     ),
                     ..Default::default()
