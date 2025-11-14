@@ -102,6 +102,7 @@ PROFILE_URL="https://graph.microsoft.com/oidc/userinfo"
 PROTECTED_URL="https://<your-domain-web>/"
 ADMIN_GROUPS="workspace-booking-admins"
 ```
+[Azure Cloud config](docu/azure.md)
 Customize your docker-compose.yaml
 ```
 docker compose up
