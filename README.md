@@ -98,6 +98,17 @@ PROFILE_URL="https://<your-domain-authentik>/application/o/userinfo/"
 PROTECTED_URL="https://<your-domain-web>/"
 ADMIN_GROUPS="authentik Admins,workspace-booking-admins"
 
+Customize your docker-compose.yaml
+```
+docker compose up
+```
+
+This will start:
+- Rust backend API
+- Angular frontend
+- MySQL database
+
+# Azure Cloud / others
 ```
 Example with EntraID please customize.
 ```
@@ -111,18 +122,8 @@ PROTECTED_URL="https://<your-domain-web>/"
 ADMIN_GROUPS="workspace-booking-admins"
 ```
 [Azure Cloud config](docu/azure.md)
-Customize your docker-compose.yaml
-```
-docker compose up
-```
-
-This will start:
-- Rust backend API
-- Angular frontend
-- MySQL database
 
 ---
-
 
 # Development
 ## Steps
@@ -160,11 +161,6 @@ REDIRECT_URL="http://localhost:5150/api/oauth2/authentik/callback/cookie"
 PROFILE_URL="http://localhost:9000/application/o/userinfo/"
 PROTECTED_URL="http://localhost:5150/"
 AUTH_TYPE="request_body"
-[alias]
-loco = "run --"
-loco-tool = "run --"
-
-playground = "run --example playground"
 ```
 then:
 ```
