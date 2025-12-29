@@ -1,0 +1,18 @@
+app:
+  image: ghcr.io/martin1088/workspace-booking-system:latest
+  imagePullPolicy: Always
+  replicas: 2
+  service:
+    type: NodePort
+    nodePort: 30150
+
+mysql:
+  image: mysql:8.0
+  storage: 10Gi
+  existingSecret: mysql-secret
+  database: mrbs
+  user: worker
+  password: worker
+
+oauth:
+  existingSecret: oauth-env

@@ -1,6 +1,5 @@
 # Working Space Booking System
 
-![Build](https://img.shields.io/github/actions/workflow/status/Martin1088/workingspace_booking_system/dockerhub.yml?branch=main)
 ![Build](https://img.shields.io/github/actions/workflow/status/Martin1088/workingspace_booking_system/ghcr-docker.yml?branch=main)
 ![Rust](https://img.shields.io/badge/Rust-1.80+-orange)
 ![Angular](https://img.shields.io/badge/Angular-17+-red)
@@ -64,6 +63,15 @@ Now it is a modern and fast webservice.
 - MySQL server
 - OAuth credentials from your provider
 
+# Kubernetes / Helm
+
+This project provides a Helm chart under `charts/workspace-booking`.
+
+Secrets are not managed by Helm and must be created beforehand.
+
+See:
+- [Helm chart](docu/kubernetes.md)
+
 # Docker Setup
 
 ## Prerequisites
@@ -126,7 +134,7 @@ git clone https://github.com/Martin1088/workingspace_booking_system.git
 cd workingspace_booking_system
 ```
 
-3. Database
+2. Database
 - Create a MySQL database and update connection details in config/development.yaml configuration.
 - Setup database mrbs
 ```
@@ -134,10 +142,10 @@ mysql -u root mrbs < backup.sql
 ```
 - Run migrations (SeaORM).
 
-4. OAuth
+3. OAuth
 - Configure OAuth credentials in config/development.yaml .env.
 
-5. Backend Setup
+4. Backend Setup
 
 Set the envirnment variables  .cargo/config.toml. Like this example
 
