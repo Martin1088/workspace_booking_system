@@ -1,3 +1,4 @@
+![Workspace Booking System Logo](docu/assets/4F74300B-2CF4-4524-BFD0-0AD02A6755C2.png)
 # Working Space Booking System
 
 ![Build](https://img.shields.io/github/actions/workflow/status/Martin1088/workingspace_booking_system/ghcr-docker.yml?branch=main)
