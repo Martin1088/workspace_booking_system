@@ -21,3 +21,14 @@ target/
 
 *.sqlite
 *.sqlite-*
+
+# Environment / secrets
+.env
+.env.*
+
+# Helm
+charts/**/charts/
+charts/**/Chart.lock
+# Kubernetes
+*.kubeconfig
+kubectl-output.yaml
