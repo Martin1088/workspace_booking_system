@@ -1,5 +1,6 @@
 target
-dockerfile
+Dockerfile.dev
+Dockerfile
 .dockerignore
 .git
 .gitignore
