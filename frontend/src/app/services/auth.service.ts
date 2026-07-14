@@ -65,7 +65,7 @@ export class AuthService {
     }));
     console.log(res);
     return res;
-  }
+   }
 
   requestOAuthProtect(): Observable<any> {
     return this.http.get(this.apiUrl + 'oauth2/protected', {
